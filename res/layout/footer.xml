@@ -1,0 +1,22 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:padding = "20px" >
+	    <FrameLayout android:layout_width="match_parent" android:id="@+id/frameLayout1" 
+	    		     android:layout_height="1px" android:foreground="@color/theme1"
+	    		     android:layout_marginTop="0px" android:layout_marginBottom="20px">
+	    </FrameLayout>
+
+	    <TextView 
+	    	android:text="@string/copyright"
+	    	android:textSize = "12px"
+	    	android:textColor = "#666"
+	    	android:id="@+id/textView1"
+		    android:gravity ="center" 
+	    	android:layout_width="wrap_content" 
+	    	android:layout_height="wrap_content" />
+    </LinearLayout>
+</merge>

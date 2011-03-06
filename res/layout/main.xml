@@ -46,17 +46,6 @@
 	    <Button android:text="Search For Nearby Network" android:id="@+id/launch_search" android:layout_width="320px" android:layout_height="wrap_content"></Button>
 	    <Button android:text="Create A Network" android:id="@+id/launch_create" android:layout_width="320px" android:layout_height="wrap_content"></Button>
 	    <Button android:text="About This Project" android:id="@+id/launch_about" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-	    <FrameLayout android:layout_width="match_parent" android:id="@+id/frameLayout1" 
-	    		     android:layout_height="1px" android:foreground="@color/theme1"
-	    		     android:layout_marginTop="20px" android:layout_marginBottom="20px">
-	    </FrameLayout>
-	    
-	    <TextView 
-	    	android:text="@string/copyright"
-	    	android:textSize = "12px"
-	    	android:id="@+id/textView1"
-		    android:gravity ="center" 
-	    	android:layout_width="wrap_content" 
-	    	android:layout_height="wrap_content" />
     </LinearLayout>
+   	<include layout = "@layout/footer" android:id= "@+id/footer" />
 </LinearLayout>

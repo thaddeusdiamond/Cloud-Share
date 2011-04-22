@@ -1,0 +1,6 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+	android:minWidth="220dp"
+	android:minHeight="220dp"
+	android:updatePeriodMillis="60000"
+	android:initialLayout="@layout/cloudshare_widget" >
+</appwidget-provider>

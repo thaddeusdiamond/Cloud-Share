@@ -6,7 +6,18 @@
     <uses-sdk android:minSdkVersion="10" />
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".CloudShare"
+    	
+    	<!-- WIDGET BROADCAST FOR UPDATES -->
+        <receiver android:name=".CloudShareWidgetProvider" android:label="@string/app_name">
+	    	<intent-filter>
+	    		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+	    	</intent-filter>
+	    	<meta-data android:name="android.appwidget.provider"
+	    			   android:resource="@xml/cloudshare_widget_info" />
+    	</receiver>
+    
+    	<!-- MAIN CLOUDSHARE ACTIVITIES -->
+    	<activity android:name=".CloudShare"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,4 +28,6 @@
 		<activity android:name=".CreateNetwork" ></activity>
 		<activity android:name=".FindNetworks" ></activity>
     </application>
+    
+    
 </manifest>

@@ -3,6 +3,9 @@
     <!-- Loading Page String Constants -->
   	    <string name="loading">Loading...</string>
     
+    <!-- Widget String Constants -->
+    	<string name="empty_widget">There Are No Chats in Your Network or You are Not on a Network at This Time</string>
+    
     <!-- Home Page String Constants -->
 	    <string name="hello"><b>Welcome to Cloud Share!</b></string>
 	    <string name="welcome_text"> Cloud Share is an Application That Lets You Connect to Those Around You Instantly</string>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+   	android:background="@color/white">
+   	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/app_name"
+	    android:textSize = "32px"
+   		android:textColor="@color/white"
+	   	android:background="@color/theme1"
+   		android:gravity ="center"
+		android:padding="20px"
+	    />    
+    <LinearLayout
+    	android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+		android:gravity ="center"
+   		android:padding="20px" >
+
+		<TextView  
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="@string/about_us"
+  		  	android:textColor="@color/text_default"
+		    android:layout_marginBottom="20px"
+   			android:gravity ="center"
+		    />
+		    
+   		<TextView  
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:text="@string/attribution"
+		    android:textColor="@color/text_default"
+  	 		android:gravity ="center"
+  		  	android:layout_marginBottom="20px"
+		    />   		
+		    
+	    <TextView  
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:text="@string/contact"
+		    android:textColor="@color/text_default"
+  	 		android:gravity ="center"
+  		  	android:autoLink="all"
+		    />
+	</LinearLayout>
+   	<include layout = "@layout/footer" android:id= "@+id/footer" />
+
+</LinearLayout>

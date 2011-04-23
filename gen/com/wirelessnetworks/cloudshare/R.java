@@ -67,6 +67,8 @@ public final class R {
         /**  Loading Page String Constants 
          */
         public static final int loading=0x7f060000;
+        public static final int new_network_alert_msg=0x7f06000b;
+        public static final int new_network_alert_title=0x7f06000a;
         public static final int welcome_text=0x7f060003;
     }
     public static final class xml {

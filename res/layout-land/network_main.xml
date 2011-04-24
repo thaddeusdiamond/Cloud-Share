@@ -51,12 +51,12 @@
 	    		android:gravity = "bottom">
 	    		<EditText android:layout_width = "match_parent"
 	    				  android:layout_weight = "20"
-					      android:layout_height = "wrap_content" />
+					      android:layout_height = "wrap_content"></EditText>
 				<Button android:layout_width = "match_parent"
 						android:layout_height = "wrap_content"
 						android:layout_marginLeft = "10px"
 						android:layout_weight = "80"
-						android:text = "Send Text" />
+						android:text = "Send Text"></Button>
 		    </LinearLayout>
 	  </LinearLayout>  
   </LinearLayout>

@@ -21,24 +21,26 @@ public final class R {
     }
     public static final class drawable {
         public static final int icon=0x7f020000;
-        public static final int widget_bg_landscape=0x7f020001;
-        public static final int widget_bg_portrait=0x7f020002;
+        public static final int loading_globe=0x7f020001;
+        public static final int widget_bg_landscape=0x7f020002;
+        public static final int widget_bg_portrait=0x7f020003;
     }
     public static final class id {
         public static final int footer=0x7f070001;
-        public static final int frameLayout1=0x7f070004;
+        public static final int frameLayout1=0x7f070005;
         public static final int header=0x7f070000;
-        public static final int imageView1=0x7f070006;
-        public static final int launch_about=0x7f070009;
-        public static final int launch_create=0x7f070008;
-        public static final int launch_search=0x7f070007;
-        public static final int network_chat_area=0x7f07000b;
-        public static final int separator=0x7f07000a;
-        public static final int textView1=0x7f070005;
+        public static final int imageView1=0x7f070007;
+        public static final int launch_about=0x7f07000a;
+        public static final int launch_create=0x7f070009;
+        public static final int launch_search=0x7f070008;
+        public static final int loading_image=0x7f070004;
+        public static final int network_chat_area=0x7f07000c;
+        public static final int separator=0x7f07000b;
+        public static final int textView1=0x7f070006;
         public static final int widget_layout=0x7f070002;
         public static final int widget_main=0x7f070003;
-        public static final int widget_recent1=0x7f07000c;
-        public static final int widget_recent2=0x7f07000d;
+        public static final int widget_recent1=0x7f07000d;
+        public static final int widget_recent2=0x7f07000e;
     }
     public static final class layout {
         public static final int about_us=0x7f030000;
@@ -55,13 +57,13 @@ public final class R {
     public static final class string {
         /**  About Us String Constants 
          */
-        public static final int about_us=0x7f060007;
+        public static final int about_us=0x7f060009;
         public static final int app_name=0x7f060005;
-        public static final int attribution=0x7f060008;
-        public static final int contact=0x7f060009;
+        public static final int attribution=0x7f06000a;
+        public static final int contact=0x7f06000b;
         /**  Footer String Constants 
          */
-        public static final int copyright=0x7f060006;
+        public static final int copyright=0x7f060008;
         public static final int description=0x7f060004;
         /**  Widget String Constants 
          */
@@ -72,8 +74,12 @@ public final class R {
         /**  Loading Page String Constants 
          */
         public static final int loading=0x7f060000;
-        public static final int new_network_alert_msg=0x7f06000b;
-        public static final int new_network_alert_title=0x7f06000a;
+        /**  Create Network String Constants 
+         */
+        public static final int network_name_prompt=0x7f060006;
+        public static final int new_network_alert_msg=0x7f06000d;
+        public static final int new_network_alert_title=0x7f06000c;
+        public static final int user_name_prompt=0x7f060007;
         public static final int welcome_text=0x7f060003;
     }
     public static final class xml {

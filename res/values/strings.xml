@@ -16,7 +16,11 @@
 	    </string>
 	    <string name="app_name">Cloud Share</string>
     
-    <!-- Footer String Constants -->
+    <!-- Create Network String Constants -->
+		<string name = "network_name_prompt">Please Enter A Name For the Network</string>
+		<string name = "user_name_prompt">Please Enter Your First and Last Name</string>
+		
+	<!-- Footer String Constants -->
 	    <string name="copyright">\u00A9 Thaddeus Diamond and Anton Petrov 2011. All Rights Reserved.</string>
     
     <!-- About Us String Constants -->

@@ -20,29 +20,30 @@
   		<TextView 
   			android:layout_width = "wrap_content"
   			android:layout_height = "wrap_content"
-  			android:textSize = "24px"
+  			android:textSize = "18px"
   			android:textColor = "@color/black"
   			android:text = "@string/network_name_prompt" />
 		<EditText
 			android:layout_width = "fill_parent"
   			android:layout_height = "wrap_content"
-  			android:textSize = "18px"
+  			android:textSize = "16px"
   			android:layout_marginBottom = "40px"
   			android:textColor = "@color/black" />
 		<TextView 
   			android:layout_width = "wrap_content"
   			android:layout_height = "wrap_content"
-  			android:textSize = "24px"
+  			android:textSize = "18px"
   			android:textColor = "@color/black"
   			android:text = "@string/user_name_prompt" />
 		<EditText
 			android:layout_width = "fill_parent"
   			android:layout_height = "wrap_content"
-  			android:textSize = "18px"
+  			android:textSize = "16px"
   			android:layout_marginBottom = "40px"
   			android:textColor = "@color/black" />
 		<Button android:layout_width = "fill_parent"
 				android:layout_height = "wrap_content"
+  				android:textSize = "18px"
 				android:text = "Create Your Network" />
   </LinearLayout>
   <include layout = "@layout/footer" android:id= "@+id/footer" />

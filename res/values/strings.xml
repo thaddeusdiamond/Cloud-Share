@@ -14,6 +14,7 @@
 	    	What if You Were Connected Instantly and Personally to Those Around You?  We Bet That the Powers of the Internet
 	    	Would Become Far Greater, and Far More Social.
 	    </string>
+	    <string name="app_name_bold"><b>Cloud Share</b></string>
 	    <string name="app_name">Cloud Share</string>
     
     <!-- Create Network String Constants -->

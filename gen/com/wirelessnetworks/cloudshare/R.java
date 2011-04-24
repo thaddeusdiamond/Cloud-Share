@@ -57,13 +57,14 @@ public final class R {
     public static final class string {
         /**  About Us String Constants 
          */
-        public static final int about_us=0x7f060009;
-        public static final int app_name=0x7f060005;
-        public static final int attribution=0x7f06000a;
-        public static final int contact=0x7f06000b;
+        public static final int about_us=0x7f06000a;
+        public static final int app_name=0x7f060006;
+        public static final int app_name_bold=0x7f060005;
+        public static final int attribution=0x7f06000b;
+        public static final int contact=0x7f06000c;
         /**  Footer String Constants 
          */
-        public static final int copyright=0x7f060008;
+        public static final int copyright=0x7f060009;
         public static final int description=0x7f060004;
         /**  Widget String Constants 
          */
@@ -76,10 +77,10 @@ public final class R {
         public static final int loading=0x7f060000;
         /**  Create Network String Constants 
          */
-        public static final int network_name_prompt=0x7f060006;
-        public static final int new_network_alert_msg=0x7f06000d;
-        public static final int new_network_alert_title=0x7f06000c;
-        public static final int user_name_prompt=0x7f060007;
+        public static final int network_name_prompt=0x7f060007;
+        public static final int new_network_alert_msg=0x7f06000e;
+        public static final int new_network_alert_title=0x7f06000d;
+        public static final int user_name_prompt=0x7f060008;
         public static final int welcome_text=0x7f060003;
     }
     public static final class xml {

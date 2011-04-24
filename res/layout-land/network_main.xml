@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent" 
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" 
   android:background="@color/white"
   android:orientation = "vertical" >
   
@@ -40,23 +40,23 @@
 	    android:gravity = "bottom" >
 		    <TextView android:id = "@+id/network_chat_area"
 		    		  android:text = "HEY!"
-	    			  android:layout_width = "match_parent"
+	    			  android:layout_width = "fill_parent"
 	    			  android:layout_height = "wrap_content"
 	    			  android:layout_marginBottom = "20px" ></TextView>
 	    	<LinearLayout
 	    		android:orientation = "horizontal"
-	    		android:layout_width = "match_parent"
+	    		android:layout_width = "fill_parent"
 	    		android:layout_height = "wrap_content"
 	    		android:layout_gravity = "bottom"
 	    		android:gravity = "bottom">
-	    		<EditText android:layout_width = "match_parent"
+	    		<EditText android:layout_width = "fill_parent"
 	    				  android:layout_weight = "20"
-					      android:layout_height = "wrap_content"></EditText>
-				<Button android:layout_width = "match_parent"
+					      android:layout_height = "wrap_content" />
+				<Button android:layout_width = "fill_parent"
 						android:layout_height = "wrap_content"
 						android:layout_marginLeft = "10px"
 						android:layout_weight = "80"
-						android:text = "Send Text"></Button>
+						android:text = "Send Text" />
 		    </LinearLayout>
 	  </LinearLayout>  
   </LinearLayout>

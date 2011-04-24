@@ -6,8 +6,9 @@
    	android:background="@color/white">
    	<TextView  
 	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/hello"
+	    android:layout_height="fill_parent"
+    	android:layout_weight = "0.8"
+		android:text="@string/hello"
 	    android:textSize = "32px"
  	    android:gravity ="center"
    		android:padding="20px"

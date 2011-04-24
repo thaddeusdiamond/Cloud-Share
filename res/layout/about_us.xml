@@ -8,8 +8,9 @@
     <LinearLayout
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-		android:gravity ="center"
+    	android:layout_height="fill_parent"
+    	android:layout_weight = "0.8"
+		android:layout_gravity ="center"
    		android:padding="20px" >
 
 		<TextView  
@@ -18,7 +19,7 @@
 		    android:text="@string/about_us"
   		  	android:textColor="@color/text_default"
 		    android:layout_marginBottom="20px"
-   			android:gravity ="center"
+  	 		android:gravity ="fill_horizontal"
 		    />
 		    
    		<TextView  
@@ -26,7 +27,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/attribution"
 		    android:textColor="@color/text_default"
-  	 		android:gravity ="center"
+  	 		android:gravity ="fill_horizontal"
   		  	android:layout_marginBottom="20px"
 		    />   		
 		    
@@ -35,7 +36,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/contact"
 		    android:textColor="@color/text_default"
-  	 		android:gravity ="center"
+  	 		android:gravity ="fill_horizontal"
   		  	android:autoLink="all"
 		    />
 	</LinearLayout>

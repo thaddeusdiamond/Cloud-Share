@@ -28,7 +28,7 @@ public class CloudShare extends Activity implements Runnable {
         /********** PERFORM INITIAL BACKGROUND LOADING WHILE SPLASH SCREEN NOT YET UP
          **********
          **********/
-    	try { Thread.sleep(3000); }
+    	try { Thread.sleep(0); }
     	catch (InterruptedException e) { Log.e("LOADING", "Loading Failed, Thread Interrupted"); };
         mHandler.sendEmptyMessage(0);
     }

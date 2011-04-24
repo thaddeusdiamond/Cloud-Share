@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" 
+  android:background="@color/white"
+  android:orientation = "vertical" >
+  
+  <include layout = "@layout/header" android:id="@+id/header" />
+  <LinearLayout
+  	android:layout_width = "fill_parent"
+  	android:layout_height = "fill_parent"
+  	android:layout_weight = "0.8"
+  	android:layout_marginTop = "20px"
+  	android:orientation = "horizontal"
+  	android:paddingLeft = "20px"
+  	android:paddingRight = "20px" >
+  
+  	  <LinearLayout
+		  	android:layout_weight = "70"
+		  	android:layout_width = "fill_parent"
+		  	android:layout_height = "fill_parent">
+		  	<ListView
+			  	android:id = "@+id/android:list"
+			  	android:layout_width = "wrap_content"
+			  	android:layout_height = "wrap_content" />
+	  </LinearLayout>	
+   	  <FrameLayout android:layout_width="1px" android:id="@+id/separator" 
+	  			   android:layout_weight = "0"
+  			       android:layout_height="fill_parent" android:foreground="@color/theme1" />
+	  
+	  <LinearLayout
+	  	android:layout_width = "fill_parent"
+	  	android:layout_height = "fill_parent"
+	  	android:layout_weight = "30"
+	  	android:paddingLeft = "20px"
+	  	android:paddingRight = "20px"
+	  	android:orientation = "vertical"
+	    android:layout_gravity = "bottom"
+	    android:gravity = "bottom" >
+		    <TextView android:id = "@+id/network_chat_area"
+		    		  android:text = "HEY!"
+	    			  android:layout_width = "match_parent"
+	    			  android:layout_height = "wrap_content"
+	    			  android:layout_marginBottom = "20px" ></TextView>
+	    	<LinearLayout
+	    		android:orientation = "horizontal"
+	    		android:layout_width = "match_parent"
+	    		android:layout_height = "wrap_content"
+	    		android:layout_gravity = "bottom"
+	    		android:gravity = "bottom">
+	    		<EditText android:layout_width = "match_parent"
+	    				  android:layout_weight = "20"
+					      android:layout_height = "wrap_content"></EditText>
+				<Button android:layout_width = "match_parent"
+						android:layout_height = "wrap_content"
+						android:layout_marginLeft = "10px"
+						android:layout_weight = "80"
+						android:text = "Send Text"></Button>
+		    </LinearLayout>
+	  </LinearLayout>  
+  </LinearLayout>
+  <include layout = "@layout/footer" android:id= "@+id/footer" />
+  
+</LinearLayout>

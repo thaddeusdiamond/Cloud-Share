@@ -25,17 +25,20 @@ public final class R {
         public static final int widget_bg_portrait=0x7f020002;
     }
     public static final class id {
-        public static final int footer=0x7f070000;
-        public static final int frameLayout1=0x7f070003;
-        public static final int imageView1=0x7f070005;
-        public static final int launch_about=0x7f070008;
-        public static final int launch_create=0x7f070007;
-        public static final int launch_search=0x7f070006;
-        public static final int textView1=0x7f070004;
-        public static final int widget_layout=0x7f070001;
-        public static final int widget_main=0x7f070002;
-        public static final int widget_recent1=0x7f070009;
-        public static final int widget_recent2=0x7f07000a;
+        public static final int footer=0x7f070001;
+        public static final int frameLayout1=0x7f070004;
+        public static final int header=0x7f070000;
+        public static final int imageView1=0x7f070006;
+        public static final int launch_about=0x7f070009;
+        public static final int launch_create=0x7f070008;
+        public static final int launch_search=0x7f070007;
+        public static final int network_chat_area=0x7f07000b;
+        public static final int separator=0x7f07000a;
+        public static final int textView1=0x7f070005;
+        public static final int widget_layout=0x7f070002;
+        public static final int widget_main=0x7f070003;
+        public static final int widget_recent1=0x7f07000c;
+        public static final int widget_recent2=0x7f07000d;
     }
     public static final class layout {
         public static final int about_us=0x7f030000;
@@ -43,9 +46,11 @@ public final class R {
         public static final int create_network=0x7f030002;
         public static final int find_network=0x7f030003;
         public static final int footer=0x7f030004;
-        public static final int loading=0x7f030005;
-        public static final int main=0x7f030006;
-        public static final int widget_main=0x7f030007;
+        public static final int header=0x7f030005;
+        public static final int loading=0x7f030006;
+        public static final int main=0x7f030007;
+        public static final int network_main=0x7f030008;
+        public static final int widget_main=0x7f030009;
     }
     public static final class string {
         /**  About Us String Constants 

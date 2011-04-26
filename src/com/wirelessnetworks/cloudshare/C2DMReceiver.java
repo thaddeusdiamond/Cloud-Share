@@ -1,5 +1,7 @@
 package com.wirelessnetworks.cloudshare;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +10,8 @@ import android.provider.Settings;
 import android.util.Log;
 
 public class C2DMReceiver extends BroadcastReceiver {
+	Intent registerIntent;
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
@@ -26,9 +30,15 @@ public class C2DMReceiver extends BroadcastReceiver {
 		    if(error.equals("SERVICE_NOT_AVAILABLE")){
 		    	Log.d("c2dm", "SERVICE_NOT_AVAILABLE");
 		    }else if(error.equals("ACCOUNT_MISSING")){
-		    	Log.d("CONTEXT", context.toString());
-		    	CloudShare.c2dmError.sendEmptyMessage(0);
-		    	//CloudShare.createAlert("C2DM Error", context.getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, context);
+		    	registerIntent = new Intent ();
+		    	registerIntent.setClass (context, Register.class);
+		    	registerIntent.setAction (Register.class.getName());
+		    	registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		    	registerIntent.putExtra("title", "Registration error");
+		    	registerIntent.putExtra("dialog", context.getString(R.string.c2dm_dialog));
+		    	registerIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
+		    	context.startActivity (registerIntent);
 		    	Log.d("c2dm", "ACCOUNT_MISSING");
 		    }else if(error.equals("AUTHENTICATION_FAILED")){
 		    	Log.d("c2dm", "AUTHENTICATION_FAILED");

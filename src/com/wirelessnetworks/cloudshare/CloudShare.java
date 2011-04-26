@@ -22,11 +22,11 @@ public class CloudShare extends Activity implements Runnable {
     private SharedPreferences registrationPreference;
     
     /*  C2DM Error Handling */
-    public static Handler c2dmError = new Handler() {
+    /*public static Handler c2dmError = new Handler() {
     	public void handleMessage(Message msg) {
     		CloudShare.createAlert("C2DM Error", CloudShare.this.getApplicationContext().getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, CloudShare.this);
     	}
-    };
+    };*/
     
     /** Called when the activity is first created. */
     @Override
@@ -41,32 +41,18 @@ public class CloudShare extends Activity implements Runnable {
         main.start();
     }
     
-    public static void createAlert (String title, String dialog, final String broadcast, final Context context) {
-    	AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-    	alertDialog.setTitle(title);
-    	alertDialog.setMessage(dialog);
-    	alertDialog.setButton("Configure", new DialogInterface.OnClickListener() {
-		     public void onClick(DialogInterface dialog, int which) {
-		    	 Intent accountSettings = new Intent (broadcast);
-		    	 context.sendBroadcast (accountSettings);
-		     } 
-	    }); 
-    	alertDialog.setButton("Not Now", new DialogInterface.OnClickListener() {
-		     public void onClick(DialogInterface dialog, int which) {
-		    	 dialog.cancel();
-		     } 
-	    });
-    	alertDialog.show();
-    }
+
     
     public void run() {
         /********** PERFORM INITIAL BACKGROUND LOADING WHILE SPLASH SCREEN NOT YET UP
          **********
          **********/
-    	Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-        registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-        registrationIntent.putExtra("sender", this.getString(R.string.senderID));
-        startService(registrationIntent);
+    	if (!registrationKeyExists) {
+    		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+    		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+    		registrationIntent.putExtra("sender", this.getString(R.string.senderID));
+    		startService(registrationIntent);
+    	}
     	
         mHandler.sendEmptyMessage(0);
     }

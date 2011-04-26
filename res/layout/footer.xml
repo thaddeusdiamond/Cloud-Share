@@ -5,7 +5,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:padding = "20px" >
-	    <FrameLayout android:layout_width="match_parent" android:id="@+id/frameLayout1" 
+	    <FrameLayout android:layout_width="fill_parent" android:id="@+id/frameLayout1" 
 	    		     android:layout_height="1px" android:foreground="@color/theme1"
 	    		     android:layout_marginTop="0px" android:layout_marginBottom="20px">
 	    </FrameLayout>

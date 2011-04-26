@@ -10,10 +10,11 @@
 	    <string name="hello"><b>Welcome to Cloud Share!</b></string>
 	    <string name="welcome_text"> Cloud Share is an Application That Lets You Connect to Those Around You Instantly</string>
 	    <string name="description"> 
-	    	The Best Way To Connect To The Internet Is Through The Closest Hub.  But What If You Could Make The Internet?
-	    	What If You Decided When To Create It, Who To Let In, And What The Purpose of It Was?  We Bet That The Powers of The Internet
+	    	The Internet Connects us to People Far and Wide We Don\'t Even Know.  But What if the People Nearest You Defined the Internet?
+	    	What if You Were Connected Instantly and Personally to Those Around You?  We Bet That the Powers of the Internet
 	    	Would Become Far Greater, and Far More Social.
 	    </string>
+	    <string name="app_name_bold"><b>Cloud Share</b></string>
 	    <string name="app_name">Cloud Share</string>
     
     <!-- Create Network String Constants -->
@@ -27,7 +28,7 @@
 	    <string name="about_us">This project was created for Yale CS434: Mobile Computing and Wireless Networks, taught
 	    by Professor Yang Yang.  A lesson in ad hoc network implementation, the android phone makes a connection
 	    to phones with this application installed on it nearby.  The created networks then have a distributed system
-	    layered on top in order to facilitate network interaction via chat, file sharing, and wireless tethering (coming soon).</string>
+	    layered on top in order to facilitate network interaction via chat and file sharing.</string>
     	<string name="attribution">For documentation about this assignment, or others like it, please visit 
     	the Yale CS434 course home page.</string>
     	<string name="contact">This program is copyright Thaddeus Diamond and Anton Petrov 2011.  All inquiries can be

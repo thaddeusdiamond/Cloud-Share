@@ -6,8 +6,8 @@
    	android:background="@color/white">
    	<TextView  
 	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/hello"
+	    android:layout_height="wrap_content"
+    	android:text="@string/hello"
 	    android:textSize = "32px"
  	    android:gravity ="center"
    		android:padding="20px"
@@ -17,35 +17,37 @@
     <LinearLayout
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-   		android:padding="20px"	 >
+    	android:layout_height="fill_parent"
+    	android:layout_weight = "0.8"
+		android:layout_gravity = "top"
+  		android:gravity = "center"
+		android:padding="20px"	 >
 
 		<TextView  
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
 		    android:text="@string/welcome_text"
-  		  	android:textColor="@color/text_default"
-		    android:gravity ="center"
-  		  	android:layout_marginBottom="20px"
+  		  	android:textSize = "18px"
+    		android:textColor="@color/text_default"
+		    android:gravity = "center"
+			android:layout_marginBottom="20px"
 		    />
 		    
    		<TextView  
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
+		    android:layout_marginBottom = "20px"
 		    android:text="@string/description"
-		    android:gravity ="center"
-  		  	android:textColor="@color/text_default"
-		    />
-	</LinearLayout>
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:padding = "20px" >
-	    <Button android:text="Search For Nearby Network" android:id="@+id/launch_search" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-	    <Button android:text="Create A Network" android:id="@+id/launch_create" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-	    <Button android:text="About This Project" android:id="@+id/launch_about" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-    </LinearLayout>
-   	<include layout = "@layout/footer" android:id= "@+id/footer" />
+  		  	android:textSize = "18px"
+    		android:textColor="@color/text_default"
+		    android:gravity = "center"
+			/>
+		<Button android:text="Search For Nearby Network" android:textSize = "18px"
+    			android:id="@+id/launch_search" android:layout_width="320px" android:layout_height="wrap_content"></Button>
+	    <Button android:text="Create A Network" android:textSize = "18px"
+    			android:id="@+id/launch_create" android:layout_width="320px" android:layout_height="wrap_content"></Button>
+	    <Button android:text="About This Project" android:textSize = "18px"
+    			android:id="@+id/launch_about" android:layout_width="320px" android:layout_height="wrap_content"></Button>
+   	</LinearLayout>
+   <include layout = "@layout/footer" android:id= "@+id/footer" />
 </LinearLayout>

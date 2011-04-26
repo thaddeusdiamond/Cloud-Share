@@ -3,30 +3,25 @@ package com.wirelessnetworks.cloudshare;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.view.View;
 import android.widget.Button;
 
 public class CloudShare extends Activity implements Runnable {
     private Button mSearchNetwork, mCreateNetwork, mAbout;
-    private boolean registrationKeyExists;
-    private SharedPreferences registrationPreference;
-    
-    /*  C2DM Error Handling */
-    /*public static Handler c2dmError = new Handler() {
-    	public void handleMessage(Message msg) {
-    		CloudShare.createAlert("C2DM Error", CloudShare.this.getApplicationContext().getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, CloudShare.this);
-    	}
-    };*/
+    private boolean regKeyExists;
+    private SharedPreferences regPreference;
+    private Location mLocation;
     
     /** Called when the activity is first created. */
     @Override
@@ -34,8 +29,32 @@ public class CloudShare extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
         
-        registrationPreference = this.getSharedPreferences(this.getString(R.string.registration_preference), Context.MODE_PRIVATE);
-        registrationKeyExists = registrationPreference.contains(this.getString(R.string.registration_key));
+        // Check whether we have already registered this phone with C2DM
+        regPreference = this.getSharedPreferences(this.getString(R.string.registration_preference), Context.MODE_PRIVATE);
+        regKeyExists = regPreference.contains(this.getString(R.string.registration_key));
+        
+        // Acquire initial location
+        // --------------------------------------------------------------------------
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+              // Called when a new location is found by the network location provider.
+              mLocation = location;
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+          };
+
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, locationListener);
+        // ----------------------------------------------------------------------------
         
         Thread main = new Thread(this);
         main.start();
@@ -47,7 +66,7 @@ public class CloudShare extends Activity implements Runnable {
         /********** PERFORM INITIAL BACKGROUND LOADING WHILE SPLASH SCREEN NOT YET UP
          **********
          **********/
-    	if (!registrationKeyExists) {
+    	if (!regKeyExists) {
     		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
     		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
     		registrationIntent.putExtra("sender", this.getString(R.string.senderID));
@@ -77,6 +96,13 @@ public class CloudShare extends Activity implements Runnable {
             // The following single for loop attaches buttons to intents via listeners
             for (int i = 0; i < programs.length; i++ ) {
             	programs[i] = new Intent(CloudShare.this, classes[i]);
+            	// Add data to intent
+            	programs[i].putExtra("androidId", Secure.getString(getContentResolver(),
+            			Secure.ANDROID_ID));
+            	programs[i].putExtra("longitude", mLocation.getLongitude());
+            	programs[i].putExtra("latitude", mLocation.getLatitude());
+            	programs[i].putExtra("c2dmKey", regPreference.getString
+            			(getApplicationContext().getString(R.string.registration_key), null));
             	buttons[i] = (Button) findViewById(layouts[i]);
             	button_list.add(buttons[i]);					// Add each button
             	

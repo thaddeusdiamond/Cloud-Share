@@ -3,7 +3,13 @@ package com.wirelessnetworks.cloudshare;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +19,8 @@ import android.widget.Button;
 
 public class CloudShare extends Activity implements Runnable {
     private Button mSearchNetwork, mCreateNetwork, mAbout;
+    static String macAddr;
+    
 	
 	/** Called when the activity is first created. */
     @Override
@@ -30,6 +38,8 @@ public class CloudShare extends Activity implements Runnable {
          **********/
     	try { Thread.sleep(0); }
     	catch (InterruptedException e) { Log.e("LOADING", "Loading Failed, Thread Interrupted"); };
+    	
+    	
         mHandler.sendEmptyMessage(0);
     }
     

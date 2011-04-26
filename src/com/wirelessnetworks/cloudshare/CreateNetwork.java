@@ -18,44 +18,49 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class CreateNetwork extends Activity {
 
-	Editable networkNameVal;
+	private String networkName, username;
+	private Button createNetwork;
+	private Toast networkNull, usernameNull;
+	HttpResponse response;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_network);
+		createNetwork = (Button) findViewById (R.id.create_network);
+		createNetwork.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Extract information from the text edit boxes,
+				// verify that is it is valid, do HTTP POST
+				networkName = ((EditText) findViewById (R.id.networkName)).getText().toString();
+				username = ((EditText) findViewById (R.id.username)).getText().toString();
+				
+				if (networkName.length() == 0) {
+					networkNull = Toast.makeText(getApplicationContext(),
+							R.string.networkNull, Toast.LENGTH_SHORT);
+					networkNull.show();
+					return;
+				}
+				if (username.length() == 0) {
+					usernameNull = Toast.makeText(getApplicationContext(),
+							R.string.usernameNull, Toast.LENGTH_SHORT);
+					usernameNull.show();
+					return;
+				}
+			}
+		});
+		postData ();
 		
-		// Prompt user to choose a name for the new network
-		// --------------------------------------------------------------------
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-		alert.setTitle(R.string.new_network_alert_title);
-		alert.setMessage(R.string.new_network_alert_msg);
-
-		// Set an EditText view to get user input 
-		final EditText networkNameBox = new EditText(this);
-		alert.setView(networkNameBox);
-
-		alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int whichButton) {
-		  networkNameVal = networkNameBox.getText();
-		  	postData ();
-		  }
-		});
-
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
-		    // Kill activity
-			finish ();
-		  }
-		});
-
-		alert.show();
 	}
 
 	public void postData() {
@@ -66,15 +71,16 @@ public class CreateNetwork extends Activity {
 	    try {
 	        // Add data to be sent
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        nameValuePairs.add(new BasicNameValuePair("n_name", "12345"));
-	        nameValuePairs.add(new BasicNameValuePair("u_name", "AndDev is Cool!"));
-	        nameValuePairs.add(new BasicNameValuePair("latitude", "AndDev is Cool!"));
-	        nameValuePairs.add(new BasicNameValuePair("longitude", "AndDev is Cool!"));
-	        nameValuePairs.add(new BasicNameValuePair("u_mac_address", "AndDev is Cool!"));
+	        nameValuePairs.add(new BasicNameValuePair("n_name", networkName));
+	        nameValuePairs.add(new BasicNameValuePair("u_name", username));
+	        nameValuePairs.add(new BasicNameValuePair("latitude", Double.toString(122.344443)));
+	        nameValuePairs.add(new BasicNameValuePair("longitude", Double.toString(-22.434344)));
+	        nameValuePairs.add(new BasicNameValuePair("u_uniqueid", CloudShare.macAddr));
+	        nameValuePairs.add(new BasicNameValuePair("u_platform", "Android"));
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
-	        HttpResponse response = httpclient.execute(httppost);
+	        response = httpclient.execute(httppost);
 	        
 	    } catch (ClientProtocolException e) {
 	        // TODO Auto-generated catch block

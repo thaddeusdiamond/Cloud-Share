@@ -35,4 +35,6 @@
     	or Anton Petrov <i>&lt;anton.petrov@yale.edu&gt;</i>. Thank You for using Cloud Share!</string>
     	<string name="new_network_alert_title">Create Network</string>
     	<string name="new_network_alert_msg">Please enter the name of the your network</string>
+    	<string name="networkNull">Invalid network name</string>
+    	<string name="usernameNull">Invalid username</string>
 </resources>

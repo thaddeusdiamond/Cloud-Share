@@ -17,33 +17,27 @@
   	android:gravity = "center"
   	android:paddingLeft = "20px"
   	android:paddingRight = "20px" >
-  		<TextView 
-  			android:layout_width = "wrap_content"
-  			android:layout_height = "wrap_content"
-  			android:textSize = "24px"
-  			android:textColor = "@color/black"
-  			android:text = "@string/network_name_prompt" />
 		<EditText
+			android:id = "@+id/networkName"
+			android:hint = "network name"
 			android:layout_width = "match_parent"
   			android:layout_height = "wrap_content"
   			android:textSize = "18px"
   			android:layout_marginBottom = "40px"
   			android:textColor = "@color/black" />
-		<TextView 
-  			android:layout_width = "wrap_content"
-  			android:layout_height = "wrap_content"
-  			android:textSize = "24px"
-  			android:textColor = "@color/black"
-  			android:text = "@string/user_name_prompt" />
 		<EditText
+			android:id = "@+id/username"
+			android:hint = "username"
 			android:layout_width = "match_parent"
   			android:layout_height = "wrap_content"
   			android:textSize = "18px"
   			android:layout_marginBottom = "40px"
   			android:textColor = "@color/black" />
-		<Button android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:text = "Create Your Network" />
+		<Button 
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:id = "@+id/create_network"
+			android:text = "Create Your Network" />
   </LinearLayout>
   <include layout = "@layout/footer" android:id= "@+id/footer" />
   

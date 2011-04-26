@@ -48,11 +48,14 @@
 	    		android:layout_height = "wrap_content"
 	    		android:layout_gravity = "center"
 	    		android:gravity = "center">
-	    		<EditText android:layout_width = "fill_parent"
+	    		<EditText android:hint = "@string/network_chat_hint"
+	    			      android:layout_width = "fill_parent"
+					      android:layout_height = "wrap_content"
 	    				  android:layout_weight = "35"
-					      android:layout_height = "wrap_content" />
+						  android:textSize = "16px" />
 				<Button android:layout_width = "fill_parent"
-						android:layout_height = "wrap_content"
+					    android:layout_height = "50px"
+						android:textSize = "16px"
 						android:layout_marginLeft = "10px"
 						android:layout_weight = "65"
 						android:text = "Send" />

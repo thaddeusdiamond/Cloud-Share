@@ -42,11 +42,11 @@
     		android:textColor="@color/text_default"
 		    android:gravity = "center"
 			/>
-		<Button android:text="Search For Nearby Network" android:textSize = "16px"
+		<Button android:text="@string/join_button" android:textSize = "16px"
     			android:id="@+id/launch_search" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-	    <Button android:text="Create A Network" android:textSize = "16px"
+	    <Button android:text="@string/create_button" android:textSize = "16px"
     			android:id="@+id/launch_create" android:layout_width="320px" android:layout_height="wrap_content"></Button>
-	    <Button android:text="About This Project" android:textSize = "16px"
+	    <Button android:text="@string/about_button" android:textSize = "16px"
     			android:id="@+id/launch_about" android:layout_width="320px" android:layout_height="wrap_content"></Button>
    	</LinearLayout>
    <include layout = "@layout/footer" android:id= "@+id/footer" />

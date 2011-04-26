@@ -14,10 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,7 +72,7 @@ public class CreateNetwork extends Activity {
 	        nameValuePairs.add(new BasicNameValuePair("u_name", username));
 	        nameValuePairs.add(new BasicNameValuePair("latitude", Double.toString(122.344443)));
 	        nameValuePairs.add(new BasicNameValuePair("longitude", Double.toString(-22.434344)));
-	        nameValuePairs.add(new BasicNameValuePair("u_uniqueid", CloudShare.macAddr));
+	        nameValuePairs.add(new BasicNameValuePair("u_uniqueid", "sosos"));
 	        nameValuePairs.add(new BasicNameValuePair("u_platform", "Android"));
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 

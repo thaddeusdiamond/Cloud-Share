@@ -14,6 +14,9 @@
 	    	What if You Were Connected Instantly and Personally to Those Around You?  We Bet That the Powers of the Internet
 	    	Would Become Far Greater, and Far More Social.
 	    </string>
+	    <string name = "join_button">Find Nearby Networks</string>
+	    <string name = "create_button">Create A Network</string>
+	    <string name = "about_button">About This Project</string>
 	    <string name="app_name_bold"><b>Cloud Share</b></string>
 	    <string name="app_name">Cloud Share</string>
     
@@ -21,21 +24,24 @@
 		<string name = "network_name_prompt">Please Enter A Name For the Network</string>
 		<string name = "user_name_prompt">Please Enter Your First and Last Name</string>
 		
-	<!-- Footer String Constants -->
-	    <string name="copyright">\u00A9 Thaddeus Diamond and Anton Petrov 2011. All Rights Reserved.</string>
-    
-    <!-- About Us String Constants -->
+	<!-- Network Main String Constants -->
+		<string name = "network_chat_hint">Type Message Here</string>
+	
+	<!-- About Us String Constants -->
 	    <string name="about_us">This project was created for Yale CS434: Mobile Computing and Wireless Networks, taught
 	    by Professor Yang Yang.  A lesson in ad hoc network implementation, the android phone makes a connection
 	    to phones with this application installed on it nearby.  The created networks then have a distributed system
-	    layered on top in order to facilitate network interaction via chat and file sharing.</string>
-    	<string name="attribution">For documentation about this assignment, or others like it, please visit 
-    	the Yale CS434 course home page.</string>
-    	<string name="contact">This program is copyright Thaddeus Diamond and Anton Petrov 2011.  All inquiries can be
+	    layered on top in order to facilitate network interaction via chat and file sharing.\n\nFor documentation about this assignment, or others like it, please visit 
+    	the Yale CS434 course home page.\n\nThis program is copyright Thaddeus Diamond and Anton Petrov 2011.  All inquiries can be
     	directed to either to Thaddeus Diamond <i>&lt;thaddeus.diamond@yale.edu&gt;</i>, Jonathan MacMillan <i>&lt;jonathan.macmillan@yale.edu&gt;</i>, 
     	or Anton Petrov <i>&lt;anton.petrov@yale.edu&gt;</i>. Thank You for using Cloud Share!</string>
     	<string name="new_network_alert_title">Create Network</string>
     	<string name="new_network_alert_msg">Please enter the name of the your network</string>
     	<string name="networkNull">Invalid network name</string>
     	<string name="usernameNull">Invalid username</string>
+    	
+   	<!-- Footer String Constants -->
+	    <string name="copyright">\u00A9 Thaddeus Diamond and Anton Petrov 2011. All Rights Reserved.</string>
+    
+    
 </resources>

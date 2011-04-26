@@ -19,23 +19,24 @@
   	android:paddingRight = "20px" >
 		<EditText
 			android:id = "@+id/networkName"
-			android:hint = "network name"
+			android:hint = "@string/network_name_prompt"
 			android:layout_width = "match_parent"
   			android:layout_height = "wrap_content"
   			android:textSize = "16px"
-  			android:layout_marginBottom = "40px"
+  			android:layout_marginBottom = "20px"
   			android:textColor = "@color/black" />
 		<EditText
 			android:id = "@+id/username"
-			android:hint = "username"
+			android:hint = "@string/user_name_prompt"
 			android:layout_width = "match_parent"
   			android:layout_height = "wrap_content"
   			android:textSize = "16px"
-  			android:layout_marginBottom = "40px"
+  			android:layout_marginBottom = "20px"
   			android:textColor = "@color/black" />
 		<Button 
 			android:layout_width = "match_parent"
 			android:layout_height = "wrap_content"
+			android:textSize = "16px"
 			android:id = "@+id/create_network"
 			android:text = "Create Your Network" />
   </LinearLayout>

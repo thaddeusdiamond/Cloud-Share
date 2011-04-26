@@ -58,16 +58,16 @@ public final class R {
         public static final int widget_main=0x7f030009;
     }
     public static final class string {
+        public static final int about_button=0x7f060007;
         /**  About Us String Constants 
          */
-        public static final int about_us=0x7f06000a;
-        public static final int app_name=0x7f060006;
-        public static final int app_name_bold=0x7f060005;
-        public static final int attribution=0x7f06000b;
-        public static final int contact=0x7f06000c;
+        public static final int about_us=0x7f06000d;
+        public static final int app_name=0x7f060009;
+        public static final int app_name_bold=0x7f060008;
         /**  Footer String Constants 
          */
-        public static final int copyright=0x7f060009;
+        public static final int copyright=0x7f060012;
+        public static final int create_button=0x7f060006;
         public static final int description=0x7f060004;
         /**  Widget String Constants 
          */
@@ -75,17 +75,21 @@ public final class R {
         /**  Home Page String Constants 
          */
         public static final int hello=0x7f060002;
+        public static final int join_button=0x7f060005;
         /**  Loading Page String Constants 
          */
         public static final int loading=0x7f060000;
-        public static final int networkNull=0x7f06000f;
+        public static final int networkNull=0x7f060010;
+        /**  Network Main String Constants 
+         */
+        public static final int network_chat_hint=0x7f06000c;
         /**  Create Network String Constants 
          */
-        public static final int network_name_prompt=0x7f060007;
-        public static final int new_network_alert_msg=0x7f06000e;
-        public static final int new_network_alert_title=0x7f06000d;
-        public static final int user_name_prompt=0x7f060008;
-        public static final int usernameNull=0x7f060010;
+        public static final int network_name_prompt=0x7f06000a;
+        public static final int new_network_alert_msg=0x7f06000f;
+        public static final int new_network_alert_title=0x7f06000e;
+        public static final int user_name_prompt=0x7f06000b;
+        public static final int usernameNull=0x7f060011;
         public static final int welcome_text=0x7f060003;
     }
     public static final class xml {

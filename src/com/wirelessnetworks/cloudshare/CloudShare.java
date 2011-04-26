@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,12 +21,12 @@ public class CloudShare extends Activity implements Runnable {
     private boolean registrationKeyExists;
     private SharedPreferences registrationPreference;
     
-    /*  C2DM Error Handling
-    private static Handler c2dmError = new Handler() {
+    /*  C2DM Error Handling */
+    public static Handler c2dmError = new Handler() {
     	public void handleMessage(Message msg) {
-    		CloudShare.createAlert("C2DM Error", CloudShare.this.getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, );
+    		CloudShare.createAlert("C2DM Error", CloudShare.this.getApplicationContext().getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, CloudShare.this);
     	}
-    }; */
+    };
     
     /** Called when the activity is first created. */
     @Override

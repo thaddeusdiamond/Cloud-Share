@@ -27,7 +27,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 		    	Log.d("c2dm", "SERVICE_NOT_AVAILABLE");
 		    }else if(error.equals("ACCOUNT_MISSING")){
 		    	Log.d("CONTEXT", context.toString());
-		    	CloudShare.createAlert("C2DM Error", context.getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, context);
+		    	CloudShare.c2dmError.sendEmptyMessage(0);
+		    	//CloudShare.createAlert("C2DM Error", context.getString(R.string.c2dm_dialog), Settings.ACTION_SYNC_SETTINGS, context);
 		    	Log.d("c2dm", "ACCOUNT_MISSING");
 		    }else if(error.equals("AUTHENTICATION_FAILED")){
 		    	Log.d("c2dm", "AUTHENTICATION_FAILED");

@@ -8,7 +8,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 public class C2DMReceiver extends BroadcastReceiver {
-	Intent registerIntent;
+	Intent alertIntent;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -28,15 +28,15 @@ public class C2DMReceiver extends BroadcastReceiver {
 		    if(error.equals("SERVICE_NOT_AVAILABLE")){
 		    	Log.d("c2dm", "SERVICE_NOT_AVAILABLE");
 		    }else if(error.equals("ACCOUNT_MISSING")){
-		    	registerIntent = new Intent ();
-		    	registerIntent.setClass (context, Register.class);
-		    	registerIntent.setAction (Register.class.getName());
-		    	registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+		    	alertIntent = new Intent ();
+		    	alertIntent.setClass (context, CloudShareAlert.class);
+		    	alertIntent.setAction (CloudShareAlert.class.getName());
+		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		    	registerIntent.putExtra("title", "Registration error");
-		    	registerIntent.putExtra("dialog", context.getString(R.string.c2dm_dialog));
-		    	registerIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
-		    	context.startActivity (registerIntent);
+		    	alertIntent.putExtra("title", "Registration error");
+		    	alertIntent.putExtra("dialog", context.getString(R.string.c2dm_dialog));
+		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
+		    	context.startActivity (alertIntent);
 		    	Log.d("c2dm", "ACCOUNT_MISSING");
 		    }else if(error.equals("AUTHENTICATION_FAILED")){
 		    	Log.d("c2dm", "AUTHENTICATION_FAILED");

@@ -7,9 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +18,6 @@ public class CloudShare extends Activity implements Runnable {
     private Button mSearchNetwork, mCreateNetwork, mAbout;
     private boolean regKeyExists;
     private SharedPreferences regPreference;
-    private Location mLocation;
     
     /** Called when the activity is first created. */
     @Override
@@ -29,33 +25,10 @@ public class CloudShare extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
         
-        // Check whether we have already registered this phone with C2DM
+        // Check whether a C2DM registration exists
         regPreference = this.getSharedPreferences(this.getString(R.string.registration_preference), Context.MODE_PRIVATE);
         regKeyExists = regPreference.contains(this.getString(R.string.registration_key));
-        
-        // Acquire initial location
-        // --------------------------------------------------------------------------
-        // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-              // Called when a new location is found by the network location provider.
-              mLocation = location;
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-          };
-
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, locationListener);
-        // ----------------------------------------------------------------------------
-        
+                
         Thread main = new Thread(this);
         main.start();
     }
@@ -99,10 +72,6 @@ public class CloudShare extends Activity implements Runnable {
             	// Add data to intent
             	programs[i].putExtra("androidId", Secure.getString(getContentResolver(),
             			Secure.ANDROID_ID));
-            	programs[i].putExtra("longitude", mLocation.getLongitude());
-            	programs[i].putExtra("latitude", mLocation.getLatitude());
-            	programs[i].putExtra("c2dmKey", regPreference.getString
-            			(getApplicationContext().getString(R.string.registration_key), null));
             	buttons[i] = (Button) findViewById(layouts[i]);
             	button_list.add(buttons[i]);					// Add each button
             	

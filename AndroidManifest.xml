@@ -42,7 +42,7 @@
 		<activity android:name=".AboutUs" ></activity>
 		<activity android:name=".CreateNetwork" ></activity>
 		<activity android:name=".FindNetworks" ></activity>
-		<activity android:name=".Register" ></activity>
+		<activity android:name=".CloudShareAlert" android:theme = "@style/Theme.Transparent"></activity>
     </application>
     
     <permission android:name="com.wirelessnetworks.cloudshare.permission.C2D_MESSAGE" android:protectionLevel="signature" />

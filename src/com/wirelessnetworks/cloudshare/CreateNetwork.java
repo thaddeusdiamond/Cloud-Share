@@ -14,7 +14,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,9 +30,18 @@ public class CreateNetwork extends Activity {
 
 	private String networkName, username;
 	private Button createNetwork;
-	private Toast networkNull, usernameNull;
+	private Toast networkNull, usernameNull, locationNull;
 	HttpResponse response;
 	
+	private Location mLocation;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Double longitude = null, latitude = null;
+    private Intent alertIntent;
+    
+	
+	// MAKE SURE TO CHECK THAT ALL DATA IS VALID BEFORE POSTING
+	// FETCH THE REGISTRATION KEY HERE
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +69,56 @@ public class CreateNetwork extends Activity {
 					usernameNull.show();
 					return;
 				}
+				if ((longitude == null) || (latitude == null)) {
+					locationNull = Toast.makeText(getApplicationContext(),
+							R.string.location_null, Toast.LENGTH_SHORT);
+					locationNull.show();
+					return;
+				}
+				postData ();
 			}
 		});
-		postData ();
+
+		// Acquire initial location
+        // --------------------------------------------------------------------------
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+              // Called when a new location is found by the network location provider.
+              // HERE YOU ARE GOING TO GET RID OF LISTENER BECAUSE LOCATION WAS FOUND
+              mLocation = location;
+              latitude = mLocation.getLatitude();
+              longitude = mLocation.getLongitude();
+              locationManager.removeUpdates(locationListener);
+            }
+
+    		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            // UNNECESSARY
+            public void onProviderEnabled(String provider) {}
+            
+            
+            public void onProviderDisabled(String provider) {
+            	alertIntent = new Intent ();
+		    	alertIntent.setClass (getApplicationContext(), CloudShareAlert.class);
+		    	alertIntent.setAction (CloudShareAlert.class.getName());
+		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		    	alertIntent.putExtra("title", "GPS Error");
+		    	alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.c2dm_dialog));
+		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
+		    	startActivity (alertIntent);
+            }
+          };
+
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        // ----------------------------------------------------------------------------
+
 		
 	}
 

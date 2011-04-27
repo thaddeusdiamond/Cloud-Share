@@ -46,6 +46,7 @@
 	    <string name="registration_preference">C2DM</string>
 	    <string name="registration_key">C2DM_REGISTRATION_KEY</string>
 	    <string name="c2dm_dialog">There was an error connecting to the live update service.  Make sure you have enabled a Google Account for this device and your password is correct.</string>
+	    <string name="location_null">Your location could not be fetched. Please wait a few more seconds and then try again.</string>
     
     
 </resources>

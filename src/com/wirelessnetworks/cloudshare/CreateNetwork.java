@@ -33,10 +33,9 @@ public class CreateNetwork extends Activity {
 	private Toast networkNull, usernameNull, locationNull;
 	HttpResponse response;
 	
-	private Location mLocation;
+	private Location mLocation = null;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Double longitude = null, latitude = null;
     private Intent alertIntent;
     
 	
@@ -69,9 +68,9 @@ public class CreateNetwork extends Activity {
 					usernameNull.show();
 					return;
 				}
-				if ((longitude == null) || (latitude == null)) {
+				if (mLocation == null) {
 					locationNull = Toast.makeText(getApplicationContext(),
-							R.string.location_null, Toast.LENGTH_SHORT);
+							R.string.location_null, Toast.LENGTH_LONG);
 					locationNull.show();
 					return;
 				}
@@ -90,8 +89,6 @@ public class CreateNetwork extends Activity {
               // Called when a new location is found by the network location provider.
               // HERE YOU ARE GOING TO GET RID OF LISTENER BECAUSE LOCATION WAS FOUND
               mLocation = location;
-              latitude = mLocation.getLatitude();
-              longitude = mLocation.getLongitude();
               locationManager.removeUpdates(locationListener);
             }
 
@@ -108,9 +105,9 @@ public class CreateNetwork extends Activity {
 		    	alertIntent.setAction (CloudShareAlert.class.getName());
 		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		    	alertIntent.putExtra("title", "GPS Error");
-		    	alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.c2dm_dialog));
-		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
+		    	alertIntent.putExtra("title", getApplicationContext().getString(R.string.gps_dialog_title));
+		    	alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.gps_dialog_msg));
+		    	alertIntent.putExtra("action", Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		    	startActivity (alertIntent);
             }
           };

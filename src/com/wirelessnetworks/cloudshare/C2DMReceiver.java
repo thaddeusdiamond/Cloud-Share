@@ -33,8 +33,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 		    	alertIntent.setAction (CloudShareAlert.class.getName());
 		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		    	alertIntent.putExtra("title", "Registration error");
-		    	alertIntent.putExtra("dialog", context.getString(R.string.c2dm_dialog));
+		    	alertIntent.putExtra("title", context.getString(R.string.c2dm_dialog_title));
+		    	alertIntent.putExtra("dialog", context.getString(R.string.c2dm_dialog_msg));
 		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
 		    	context.startActivity (alertIntent);
 		    	Log.d("c2dm", "ACCOUNT_MISSING");

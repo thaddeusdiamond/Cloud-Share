@@ -65,9 +65,11 @@ public final class R {
         /**  About Us String Constants 
          */
         public static final int about_us=0x7f06000d;
+        public static final int androidid_toast_null=0x7f06001d;
         public static final int app_name=0x7f060009;
         public static final int app_name_bold=0x7f060008;
-        public static final int c2dm_dialog=0x7f060016;
+        public static final int c2dm_dialog_msg=0x7f060016;
+        public static final int c2dm_dialog_title=0x7f060018;
         /**  Footer String Constants 
          */
         public static final int copyright=0x7f060012;
@@ -76,6 +78,10 @@ public final class R {
         /**  Widget String Constants 
          */
         public static final int empty_widget=0x7f060001;
+        public static final int gps_dialog_msg=0x7f06001a;
+        public static final int gps_dialog_title=0x7f060019;
+        public static final int gps_toast_outofservice=0x7f06001c;
+        public static final int gps_toast_tempunavailable=0x7f06001b;
         /**  Home Page String Constants 
          */
         public static final int hello=0x7f060002;
@@ -83,8 +89,8 @@ public final class R {
         /**  Loading Page String Constants 
          */
         public static final int loading=0x7f060000;
-        public static final int location_null=0x7f060017;
-        public static final int networkNull=0x7f060010;
+        public static final int location_toast_null=0x7f060017;
+        public static final int networkName_toast_null=0x7f060010;
         /**  Network Main String Constants 
          */
         public static final int network_chat_hint=0x7f06000c;
@@ -95,9 +101,10 @@ public final class R {
         public static final int new_network_alert_title=0x7f06000e;
         public static final int registration_key=0x7f060015;
         public static final int registration_preference=0x7f060014;
+        public static final int regkey_toast_null=0x7f06001e;
         public static final int senderID=0x7f060013;
         public static final int user_name_prompt=0x7f06000b;
-        public static final int usernameNull=0x7f060011;
+        public static final int username_toast_null=0x7f060011;
         public static final int welcome_text=0x7f060003;
     }
     public static final class style {

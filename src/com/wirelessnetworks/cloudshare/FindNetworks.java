@@ -97,7 +97,7 @@ public class FindNetworks extends ListActivity {
 		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		    	alertIntent.putExtra("title", "GPS Error");
-		    	alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.c2dm_dialog));
+		    	//alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.c2dm_dialog));
 		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
 		    	startActivity (alertIntent);
             }

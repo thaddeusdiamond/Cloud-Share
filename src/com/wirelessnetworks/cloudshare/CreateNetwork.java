@@ -31,7 +31,7 @@ public class CreateNetwork extends Activity {
 	private String networkName, username;
 	private Button createNetwork;
 	private Toast networkNull, usernameNull, locationNull;
-	HttpResponse response;
+	private HttpResponse response;
 	
 	private Location mLocation;
     private LocationManager locationManager;
@@ -75,7 +75,7 @@ public class CreateNetwork extends Activity {
 					locationNull.show();
 					return;
 				}
-				response = CloudShareUtils.postData(new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
+				response = CloudShareUtils.postData("create", new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
 						new String[] {networkName, username, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()), , "Android", });
 			}
 		});

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:orientation="vertical"
+    android:layout_height = "wrap_content"
+    android:layout_width = "wrap_content"
+    android:padding="10dp"
+    >
+
+<TextView
+    android:id = "@+id/network_title"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textSize="18px"  />
+
+<TextView
+    android:id = "@+id/network_owner"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textSize="15px"  />
+
+</LinearLayout>
+

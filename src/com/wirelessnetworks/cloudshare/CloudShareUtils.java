@@ -12,13 +12,16 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Element;
 
 public class CloudShareUtils {
 
-	public static HttpResponse postData(String[] parameters, String[] values) {
+	private static String route_url = "http://cloudshareroute.appspot.com";
+	
+	public static HttpResponse postData(String path, String[] parameters, String[] values) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
+	    HttpPost httppost = new HttpPost(route_url + "/" + path);
 
 	    try {
 	        // Add data to be sent
@@ -36,6 +39,21 @@ public class CloudShareUtils {
 	        // TODO Auto-generated catch block
 	    }
 		return null;
-	} 
+	}
+	
+	public static String[] getDOMresults(Element parent, String[] fields) {
+		String[] child_values = new String[fields.length];
+		
+		//Pull out the item's information
+		for (int i = 0; i < fields.length; i++)
+			child_values[i] = getTagValue(fields[i], parent);
+		
+		return child_values;
+	}
+	
+	// Get a single tag from a DOM element
+	private static String getTagValue(String tag, Element el){
+	    return el.getElementsByTagName(tag).item(0).getChildNodes().item(0).getNodeValue();    
+	 }
 	
 }

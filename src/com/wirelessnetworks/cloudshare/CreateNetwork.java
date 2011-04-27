@@ -16,11 +16,13 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,15 +30,17 @@ import android.widget.Toast;
 
 public class CreateNetwork extends Activity {
 
-	private String networkName, username;
+	private String networkName, username, androidId = null, registrationKey = null;
 	private Button createNetwork;
-	private Toast networkNull, usernameNull, locationNull;
+	private Toast networkNull, usernameNull, locationNull, tempUnavailable, outOfService,
+			androidIdNull, regKeyNull;
 	HttpResponse response;
 	
 	private Location mLocation = null;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Intent alertIntent;
+    private SharedPreferences regPreference;
     
 	
 	// MAKE SURE TO CHECK THAT ALL DATA IS VALID BEFORE POSTING
@@ -55,26 +59,41 @@ public class CreateNetwork extends Activity {
 				// verify that is it is valid, do HTTP POST
 				networkName = ((EditText) findViewById (R.id.networkName)).getText().toString();
 				username = ((EditText) findViewById (R.id.username)).getText().toString();
-				
+				androidId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+				regPreference = getSharedPreferences(getApplicationContext().getString(R.string.registration_preference), Context.MODE_PRIVATE);
+				registrationKey = regPreference.getString(getApplicationContext().getString (R.string.registration_key), null);
 				if (networkName.length() == 0) {
 					networkNull = Toast.makeText(getApplicationContext(),
-							R.string.networkNull, Toast.LENGTH_SHORT);
+							R.string.networkName_toast_null, Toast.LENGTH_SHORT);
 					networkNull.show();
 					return;
 				}
 				if (username.length() == 0) {
 					usernameNull = Toast.makeText(getApplicationContext(),
-							R.string.usernameNull, Toast.LENGTH_SHORT);
+							R.string.username_toast_null, Toast.LENGTH_SHORT);
 					usernameNull.show();
 					return;
 				}
 				if (mLocation == null) {
 					locationNull = Toast.makeText(getApplicationContext(),
-							R.string.location_null, Toast.LENGTH_LONG);
+							R.string.location_toast_null, Toast.LENGTH_LONG);
 					locationNull.show();
 					return;
 				}
-				postData ();
+				if (androidId == null) {
+					androidIdNull = Toast.makeText(getApplicationContext(),
+							R.string.androidid_toast_null, Toast.LENGTH_LONG);
+					androidIdNull.show();
+					finish ();
+					return;
+				}
+				if ((registrationKey == null) || (registrationKey.length() == 0)){
+					regKeyNull = Toast.makeText(getApplicationContext(), R.string.regkey_toast_null, Toast.LENGTH_LONG);
+					regKeyNull.show();
+					return;
+				}
+				response = CloudShareUtils.postData(new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
+						new String[] {networkName, username, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()), androidId , "Android", registrationKey});
 			}
 		});
 
@@ -87,13 +106,26 @@ public class CreateNetwork extends Activity {
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
               // Called when a new location is found by the network location provider.
-              // HERE YOU ARE GOING TO GET RID OF LISTENER BECAUSE LOCATION WAS FOUND
               mLocation = location;
               locationManager.removeUpdates(locationListener);
             }
 
     		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
+            		tempUnavailable = Toast.makeText(getApplicationContext(),
+            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
+            		tempUnavailable.show();
+            		return;
+            	}
+            	if (status == android.location.LocationProvider.OUT_OF_SERVICE) {
+            		outOfService = Toast.makeText(getApplicationContext(),
+            				R.string.gps_toast_outofservice, Toast.LENGTH_LONG);
+            		outOfService.show();
+            		finish ();
+            		return;
+            	}
+            }
 
             // UNNECESSARY
             public void onProviderEnabled(String provider) {}
@@ -118,31 +150,5 @@ public class CreateNetwork extends Activity {
 
 		
 	}
-
-	public void postData() {
-	    // Create a new HttpClient and Post Header
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
-
-	    try {
-	        // Add data to be sent
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        nameValuePairs.add(new BasicNameValuePair("n_name", networkName));
-	        nameValuePairs.add(new BasicNameValuePair("u_name", username));
-	        nameValuePairs.add(new BasicNameValuePair("latitude", Double.toString(122.344443)));
-	        nameValuePairs.add(new BasicNameValuePair("longitude", Double.toString(-22.434344)));
-	        nameValuePairs.add(new BasicNameValuePair("u_uniqueid", "sosos"));
-	        nameValuePairs.add(new BasicNameValuePair("u_platform", "Android"));
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-	        // Execute HTTP Post Request
-	        response = httpclient.execute(httppost);
-	        
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    }
-	} 
 	
 }

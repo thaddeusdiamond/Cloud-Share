@@ -75,7 +75,8 @@ public class CreateNetwork extends Activity {
 					locationNull.show();
 					return;
 				}
-				postData ();
+				response = CloudShareUtils.postData(new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
+						new String[] {networkName, username, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()), , "Android", });
 			}
 		});
 
@@ -121,31 +122,5 @@ public class CreateNetwork extends Activity {
 
 		
 	}
-
-	public void postData() {
-	    // Create a new HttpClient and Post Header
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
-
-	    try {
-	        // Add data to be sent
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        nameValuePairs.add(new BasicNameValuePair("n_name", networkName));
-	        nameValuePairs.add(new BasicNameValuePair("u_name", username));
-	        nameValuePairs.add(new BasicNameValuePair("latitude", Double.toString(122.344443)));
-	        nameValuePairs.add(new BasicNameValuePair("longitude", Double.toString(-22.434344)));
-	        nameValuePairs.add(new BasicNameValuePair("u_uniqueid", "sosos"));
-	        nameValuePairs.add(new BasicNameValuePair("u_platform", "Android"));
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-	        // Execute HTTP Post Request
-	        response = httpclient.execute(httppost);
-	        
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    }
-	} 
 	
 }

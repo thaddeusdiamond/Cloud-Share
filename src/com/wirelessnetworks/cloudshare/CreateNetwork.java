@@ -104,7 +104,7 @@ public class CreateNetwork extends Activity {
 					}
 				});
 				mProgressDialog.setTitle("Creating Network");
-				mProgressDialog.setMessage("Please do not exit the application at this time");
+				mProgressDialog.setMessage(getApplicationContext().getString(R.string.progress_dialog));
 				mProgressDialog.setIndeterminate(true);
 				mProgressDialog.setCancelable(false);
 				mProgressDialog.show();
@@ -207,7 +207,7 @@ public class CreateNetwork extends Activity {
 		    	return;
 		    }
 		  mainIntent = new Intent (this, NetworkMain.class);
-		  mainIntent.putExtra("network_xml", result);
+		  mainIntent.putExtra("networkXml", result);
 		  startActivity(mainIntent);
 		} catch (Exception e) {
 			Log.v("PARSE ERROR", e.getMessage());

@@ -12,26 +12,25 @@
   	android:layout_height = "fill_parent"
   	android:layout_weight = "0.8"
   	android:layout_marginTop = "20px"
-  	android:orientation = "horizontal"
+  	android:orientation = "vertical"
   	android:layout_gravity = "center"
-  	android:gravity = "top"
+  	android:gravity = "center"
   	android:paddingLeft = "20px"
   	android:paddingRight = "20px" >
-  		<TextView
-		  	android:id = "@+id/join_error_msg"
-		  	android:text = "There was an error retrieving your location.  Please try again later."
-		  	android:textSize = "24px"
-		  	android:textColor = "@color/black"
-		  	android:gravity = "center"
-		  	android:visibility = "gone"
-		  	android:layout_width = "wrap_content"
-		  	android:layout_height = "wrap_content" />
-		  	
-  		<ListView
-		  	android:id = "@+id/network_list"
-		  	android:visibility = "gone"
-		  	android:layout_width = "fill_parent"
-		  	android:layout_height = "wrap_content" />
+		<EditText
+			android:id = "@+id/username"
+			android:hint = "@string/user_name_prompt"
+			android:layout_width = "match_parent"
+  			android:layout_height = "wrap_content"
+  			android:textSize = "16px"
+  			android:layout_marginBottom = "20px"
+  			android:textColor = "@color/black" />
+		<Button 
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:textSize = "16px"
+			android:id = "@+id/join_network"
+			android:text = "Join The Network" />
   </LinearLayout>
   <include layout = "@layout/footer" android:id= "@+id/footer" />
   

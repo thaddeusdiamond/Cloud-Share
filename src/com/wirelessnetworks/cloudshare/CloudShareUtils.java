@@ -54,8 +54,6 @@ public class CloudShareUtils {
 		
 	}
 	
-	
-	
 	public static String[] getDOMresults(Element parent, String[] fields) {
 		String[] child_values = new String[fields.length];
 		

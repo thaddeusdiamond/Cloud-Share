@@ -42,6 +42,8 @@
 		<activity android:name=".AboutUs" ></activity>
 		<activity android:name=".CreateNetwork" ></activity>
 		<activity android:name=".FindNetwork" ></activity>
+		<activity android:name=".JoinNetwork" ></activity>
+		<activity android:name=".LeaveNetwork" ></activity>
 		<activity android:name=".NetworkMain" ></activity>
 		<activity android:name=".CloudShareAlert" android:theme = "@style/Theme.Transparent"></activity>
     </application>

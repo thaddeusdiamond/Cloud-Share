@@ -20,7 +20,9 @@
 	    <string name="app_name_bold"><b>Cloud Share</b></string>
 	    <string name="app_name">Cloud Share</string>
     
-    <!-- Create Network String Constants -->
+    <!-- Join Network Constants -->
+		<string name = "no_networks">No Networks Could Be Found in Your Area</string>
+	<!-- Create Network String Constants -->
 		<string name = "network_name_prompt">Please Enter A Name For the Network</string>
 		<string name = "user_name_prompt">Please Enter Your First and Last Name</string>
 		

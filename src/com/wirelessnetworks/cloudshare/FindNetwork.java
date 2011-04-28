@@ -1,14 +1,7 @@
 package com.wirelessnetworks.cloudshare;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.security.NoSuchAlgorithmException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
@@ -16,26 +9,31 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class FindNetworks extends ListActivity {
+public class FindNetwork extends Activity implements Runnable {
 
+	private Toast tempUnavailable, outOfService;
+	
 	private HttpResponse response;
 	
 	private Location mLocation = null;
@@ -47,7 +45,7 @@ public class FindNetworks extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.find_network);
+		setContentView(R.layout.find_networks);
 		
 		// Acquire initial location
         // --------------------------------------------------------------------------
@@ -78,12 +76,21 @@ public class FindNetworks extends ListActivity {
 			  }
             }
 
-    		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
+    		/// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
             public void onStatusChanged(String provider, int status, Bundle extras) {
-            	if (status == LocationProvider.OUT_OF_SERVICE)
-            		;
-            	else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
-            		;
+            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
+            		tempUnavailable = Toast.makeText(getApplicationContext(),
+            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
+            		tempUnavailable.show();
+            		return;
+            	}
+            	if (status == android.location.LocationProvider.OUT_OF_SERVICE) {
+            		outOfService = Toast.makeText(getApplicationContext(),
+            				R.string.gps_toast_outofservice, Toast.LENGTH_LONG);
+            		outOfService.show();
+            		finish ();
+            		return;
+            	}
             }
 
             // UNNECESSARY
@@ -96,39 +103,33 @@ public class FindNetworks extends ListActivity {
 		    	alertIntent.setAction (CloudShareAlert.class.getName());
 		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 		    			Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		    	alertIntent.putExtra("title", "GPS Error");
-		    	//alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.c2dm_dialog));
-		    	alertIntent.putExtra("action", Settings.ACTION_ADD_ACCOUNT);
+		    	alertIntent.putExtra("title", getApplicationContext().getString(R.string.gps_dialog_title));
+		    	alertIntent.putExtra("dialog", getApplicationContext().getString(R.string.gps_dialog_msg));
+		    	alertIntent.putExtra("action", Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		    	startActivity (alertIntent);
             }
-        };
+          };
           
 
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         // ----------------------------------------------------------------------------
+        
+        Thread main = new Thread(this);
+        main.start();
 	}
 	
-	@SuppressWarnings("unchecked")
+	public void run() {
+		try { Thread.sleep(10000); }
+		catch (InterruptedException e) { Log.v("THREAD", "Sleep Thread Error"); }
+		
+		if (mLocation == null)
+			mHandler.sendEmptyMessage(0);
+	}
+	
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		try {
-			// Parse the xml input resulting from a refresh post
-			StringBuilder results = new StringBuilder();
-			InputStream xml_input = response.getEntity().getContent();
-			BufferedReader xml_reader = new BufferedReader(new InputStreamReader(xml_input), 8192);
-			String result = null;
-			while ((result = xml_reader.readLine()) != null) {
-				results.append(result);
-			}
-			xml_reader.close();
-			
-			
-			StringReader reader = new StringReader( results.toString() );
-			InputSource inputSource = new InputSource( reader );
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		    Document doc = dBuilder.parse(inputSource);
-		    reader.close();
+			Document doc = CloudShareUtils.getDOMbody(response);
 		    
 		    //Beginning information
 		    doc.getDocumentElement().normalize();
@@ -152,14 +153,15 @@ public class FindNetworks extends ListActivity {
 		    	}
 		    }
 		    
-		    // Now create a simple cursor adapter and set it to display
+		    ListView lv = (ListView) findViewById(R.id.network_list);
+	        lv.setTextFilterEnabled(true);
+	        
+	        // Now create a simple cursor adapter and set it to display
 	        ArrayAdapter network_name_adapter = 
 	        	    new ArrayAdapter(this, R.layout.network_item, R.id.network_title, network_names);
-	        setListAdapter(network_name_adapter);
+	        lv.setAdapter(network_name_adapter);
 		    
-		    ListView lv = getListView();
-	        lv.setTextFilterEnabled(true);
-
+		    
 	        lv.setOnItemClickListener(new OnItemClickListener() {
 	          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	        	
@@ -175,5 +177,14 @@ public class FindNetworks extends ListActivity {
 		}
 	}
 	
-	
+	private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+        	TextView text = (TextView) findViewById(R.id.join_error_msg);
+			ImageView image = (ImageView) findViewById(R.id.loading_image);
+			text.setVisibility(View.VISIBLE);
+			image.setVisibility(View.GONE);
+			
+			locationManager.removeUpdates(locationListener);
+        }
+	};
 }

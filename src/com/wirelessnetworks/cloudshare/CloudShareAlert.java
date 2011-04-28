@@ -36,6 +36,7 @@ public class CloudShareAlert extends Activity {
     	
     	
     	
+    	
     	builder.create().show();
     }
 }

@@ -43,7 +43,7 @@
 		<activity android:name=".CreateNetwork" ></activity>
 		<activity android:name=".FindNetwork" ></activity>
 		<activity android:name=".JoinNetwork" ></activity>
-		<activity android:name=".LeaveNetwork" ></activity>
+		<service android:name="com.wirelessnetworks.cloudshare.LeaveNetwork" ></service>
 		<activity android:name=".NetworkMain" ></activity>
 		<activity android:name=".CloudShareAlert" android:theme = "@style/Theme.Transparent"></activity>
     </application>

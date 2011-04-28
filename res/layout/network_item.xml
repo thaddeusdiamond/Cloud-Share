@@ -14,12 +14,27 @@
     android:textColor = "@color/black"
     android:layout_marginBottom = "5dp"  />
 
-<TextView
-    android:id = "@+id/network_created"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:textSize="15px"  />
-    
+<LinearLayout
+	android:orientation = "horizontal"
+	android:layout_width = "fill_parent"
+	android:layout_height = "wrap_content" >
+	
+	<TextView
+	    android:id = "@+id/network_num_users"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight = "50"
+	    android:textSize="15px"  />
+	    
+	<TextView
+	    android:id = "@+id/network_created"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight = "50"
+	    android:gravity = "right"
+	    android:textSize="15px"  />
+</LinearLayout>
+
 <TextView
     android:id = "@+id/network_id"
     android:visibility = "gone"

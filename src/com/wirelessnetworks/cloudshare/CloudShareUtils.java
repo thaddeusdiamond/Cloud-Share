@@ -20,8 +20,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.util.Log;
 
 public class CloudShareUtils {
@@ -98,5 +103,65 @@ public class CloudShareUtils {
 			Log.v("PARSE ERROR", e.getMessage());
 		}
 		return results.toString();
+	}
+	
+	public static String checkErrors(HttpResponse response) throws Exception {
+		String result = CloudShareUtils.parseHttpResponse(response);
+		Document doc = CloudShareUtils.getDOMbody(result);
+		
+		NodeList errors = doc.getElementsByTagName("error");
+		if (errors.getLength() > 0)
+			throw new Exception();
+		
+		return result;
+	}
+	
+	
+	/*						MASSIVELY OVERLOADED REVERSE LOCATION PLUG N PLAY METHODS						*/
+	public static String reverseLocation(Context context, Location location) throws Exception {
+		double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        String result;
+        try {
+        	result = reverseLocation(context, latitude, longitude);
+        } catch (Exception e) {
+        	throw e;
+        }
+        return result;
+	}
+	
+	public static String reverseLocation(Context context, String latitudeString, String longitudeString) throws Exception {
+		double latitude = Double.parseDouble(latitudeString);
+        double longitude = Double.parseDouble(longitudeString);
+
+        String result;
+        try {
+        	result = reverseLocation(context, latitude, longitude);
+        } catch (Exception e) {
+        	throw e;
+        }
+        return result;
+	}
+	
+	public static String reverseLocation(Context context, double latitude, double longitude) throws Exception {
+		Geocoder reverseGeo = new Geocoder(context);
+        List<Address> curLocationList;
+        String locString = "";
+        if (reverseGeo != null){
+            try {
+                curLocationList = reverseGeo.getFromLocation(latitude, longitude, 1);
+            } catch (Exception e) {
+                throw e;
+            }
+
+            if (curLocationList.size()> 0) {
+                locString += curLocationList.get(0).getAddressLine(0);
+                locString += curLocationList.get(0).getLocality();
+            } else {
+            	throw new Exception();
+            }
+        }
+        return locString;
 	}
 }

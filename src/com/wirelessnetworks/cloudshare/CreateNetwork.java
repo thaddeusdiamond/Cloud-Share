@@ -4,8 +4,6 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -20,7 +18,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -187,32 +184,23 @@ public class CreateNetwork extends Activity {
 				e.printStackTrace();
 			  }
 			  mProgressDialog.dismiss();
-			  return;
+			  finish();
             }
 	};
 	
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
+		String result;
 		try {
-			String result = CloudShareUtils.parseHttpResponse(response);
-			Document doc = CloudShareUtils.getDOMbody(result);
-		    
-		    doc.getDocumentElement().normalize();
-		    NodeList error = doc.getElementsByTagName("error");
-		    // An error XML file was returned
-		    if (error.getLength() > 0) {
-		    	backendXMLError = Toast.makeText(getApplicationContext(),
-		    			R.string.backend_toast_xmlerror, Toast.LENGTH_SHORT);
-		    	backendXMLError.show();
-		    	finish ();
-		    	return;
-		    }
-		  mainIntent = new Intent (this, NetworkMain.class);
-		  mainIntent.putExtra("networkXml", result);
-		  startActivity(mainIntent);
+			result = CloudShareUtils.checkErrors(response);
 		} catch (Exception e) {
-			Log.v("PARSE ERROR", e.getMessage());
+		    backendXMLError = Toast.makeText(getApplicationContext(), R.string.backend_toast_xmlerror, Toast.LENGTH_SHORT);
+		    backendXMLError.show();
+		    return;
 		}
-		return;
+		
+		mainIntent = new Intent (this, NetworkMain.class);
+		mainIntent.putExtra("networkXml", result);
+		startActivity(mainIntent);
 	}
 	
 }

@@ -36,7 +36,7 @@ public class FindNetwork extends Activity implements Runnable {
 	private HttpResponse response;
 	private String mAndroidId;
 	
-	private Location mLocation = null;
+	private Location mLocation;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Intent alertIntent;
@@ -47,6 +47,16 @@ public class FindNetwork extends Activity implements Runnable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.find_networks);
 		
+		fillNetworks();
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		fillNetworks();
+	}
+	
+	private void fillNetworks() {
 		mAndroidId = getIntent().getStringExtra("androidId");
 		
 		mProgressDialog = new ProgressDialog(this);
@@ -59,6 +69,7 @@ public class FindNetwork extends Activity implements Runnable {
 		// Acquire initial location
         // --------------------------------------------------------------------------
         // Acquire a reference to the system Location Manager
+		mLocation = null;
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
@@ -77,7 +88,9 @@ public class FindNetwork extends Activity implements Runnable {
               }
 			  
 			  if (found_networks) {
+				  TextView text = (TextView) findViewById(R.id.join_error_msg);
 				  ListView lv = (ListView) findViewById(R.id.network_list);
+				  text.setVisibility(View.GONE);
 				  lv.setVisibility(View.VISIBLE);
 			  }
 			  mProgressDialog.dismiss(); 
@@ -141,6 +154,7 @@ public class FindNetwork extends Activity implements Runnable {
 		    if (networks.getLength() > 0) {
 		    	String[] network_ids = new String[networks.getLength()]; 
 			    String[] network_names = new String[networks.getLength()];
+			    String[] network_num_users = new String[networks.getLength()];
 			    String[] network_createds = new String[networks.getLength()];
 			    
 			    // Go through the networks and parse out
@@ -153,6 +167,7 @@ public class FindNetwork extends Activity implements Runnable {
 			    	    // NEED TO ADD TO LIST HERE
 			    	    network_ids[i] = information[0];
 			    	    network_names[i] = information[1];
+			    	    network_num_users[i] = information[2];
 			    	    network_createds[i] = information[5];
 			    	}
 			    }
@@ -160,7 +175,7 @@ public class FindNetwork extends Activity implements Runnable {
 			    ListView lv = (ListView) findViewById(R.id.network_list);
 		        lv.setTextFilterEnabled(true);
 		        
-		        NetworkAdapter n_adapter = new NetworkAdapter(this, R.id.network_created, network_ids, network_names, network_createds);
+		        NetworkAdapter n_adapter = new NetworkAdapter(this, R.id.network_created, network_ids, network_names, network_num_users, network_createds);
 		        lv.setAdapter(n_adapter);
 		        lv.setOnItemClickListener(new OnItemClickListener() {
 		          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -186,7 +201,9 @@ public class FindNetwork extends Activity implements Runnable {
 	
 	private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-        	TextView text = (TextView) findViewById(R.id.join_error_msg);
+        	ListView lv = (ListView) findViewById(R.id.network_list);
+			lv.setVisibility(View.GONE);
+			TextView text = (TextView) findViewById(R.id.join_error_msg);
 			if (msg.what == 1)
 				text.setText("No networks were found in your area.  Please create one from the home page, or try again later.");
 			else if (msg.what == 2)
@@ -202,12 +219,15 @@ public class FindNetwork extends Activity implements Runnable {
 
 		private String[] network_ids; 
 	    private String[] network_names;
+	    private String[] network_num_users;
 	    private String[] network_createds;
 	    
-        public NetworkAdapter(Context context, int textViewResourceId, String[] network_ids, String[] network_names, String[] network_createds) {
+        public NetworkAdapter(Context context, int textViewResourceId, String[] network_ids, String[] network_names, 
+        						String[] network_num_users, String[] network_createds) {
                 super(context, textViewResourceId, network_ids);
                 this.network_ids = network_ids;
                 this.network_names = network_names;
+                this.network_num_users = network_num_users;
                 this.network_createds = network_createds;
         }
 
@@ -219,16 +239,20 @@ public class FindNetwork extends Activity implements Runnable {
                     v = vi.inflate(R.layout.network_item, null);
                 }
                 String n_name = network_names[position];
+                String n_num_users = network_num_users[position];
                 String n_id = network_ids[position];
                 String n_created = network_createds[position];
                 
                 if (n_name != null) {
                         TextView name = (TextView) v.findViewById(R.id.network_title);
+                        TextView num_users = (TextView) v.findViewById(R.id.network_num_users);
                         TextView created = (TextView) v.findViewById(R.id.network_created);
                         TextView id = (TextView) v.findViewById(R.id.network_id);
                         
                         if (name != null)
                         	name.setText(n_name);
+                        if (num_users != null)
+                        	num_users.setText(n_num_users + " Active User" + (Integer.parseInt(n_num_users) > 1 ? "s" : ""));
                         if (id != null) 
                         	id.setText(n_id);
                         if (created != null)

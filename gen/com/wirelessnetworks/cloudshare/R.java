@@ -37,20 +37,21 @@ public final class R {
         public static final int launch_create=0x7f08000e;
         public static final int launch_search=0x7f08000d;
         public static final int networkName=0x7f080004;
-        public static final int network_chat_area=0x7f080015;
-        public static final int network_created=0x7f080011;
-        public static final int network_id=0x7f080012;
+        public static final int network_chat_area=0x7f080016;
+        public static final int network_created=0x7f080012;
+        public static final int network_id=0x7f080013;
         public static final int network_list=0x7f080008;
+        public static final int network_num_users=0x7f080011;
         public static final int network_title=0x7f080010;
-        public static final int num_members=0x7f080014;
-        public static final int send=0x7f080016;
-        public static final int separator=0x7f080013;
+        public static final int num_members=0x7f080015;
+        public static final int send=0x7f080017;
+        public static final int separator=0x7f080014;
         public static final int textView1=0x7f08000a;
         public static final int username=0x7f080005;
         public static final int widget_layout=0x7f080002;
         public static final int widget_main=0x7f080003;
-        public static final int widget_recent1=0x7f080017;
-        public static final int widget_recent2=0x7f080018;
+        public static final int widget_recent1=0x7f080018;
+        public static final int widget_recent2=0x7f080019;
     }
     public static final class layout {
         public static final int about_us=0x7f030000;

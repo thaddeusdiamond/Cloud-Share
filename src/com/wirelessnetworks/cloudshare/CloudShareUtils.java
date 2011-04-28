@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +24,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.util.Log;
 
 public class CloudShareUtils {
@@ -110,5 +115,29 @@ public class CloudShareUtils {
 			throw new Exception();
 		
 		return result;
+	}
+	
+	public static String reverseLocation(Context context, Location location) throws Exception {
+		double latPoint = location.getLatitude();
+        double lngPoint = location.getLongitude();
+
+        Geocoder reverseGeo = new Geocoder(context, Locale.getDefault());
+        List<Address> curLocationList;
+        String locString = "";
+        if (reverseGeo != null){
+            try {
+                curLocationList = reverseGeo.getFromLocation(latPoint, lngPoint, 1);
+            } catch (Exception e) {
+                throw e;
+            }
+
+            if (curLocationList.size()> 0) {
+                locString += curLocationList.get(0).getAddressLine(0);
+                locString += curLocationList.get(0).getLocality();
+            } else {
+            	throw new Exception();
+            }
+        }
+        return locString;
 	}
 }

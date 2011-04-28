@@ -137,7 +137,8 @@ public class FindNetwork extends Activity implements Runnable {
 	
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		try {
-			Document doc = CloudShareUtils.getDOMbody(response);
+			String result = CloudShareUtils.parseHttpResponse(response);
+			Document doc = CloudShareUtils.getDOMbody(result);
 		    
 		    //Beginning information
 		    doc.getDocumentElement().normalize();

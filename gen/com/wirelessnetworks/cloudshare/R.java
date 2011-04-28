@@ -72,6 +72,7 @@ public final class R {
         public static final int androidid_toast_null=0x7f06001e;
         public static final int app_name=0x7f060009;
         public static final int app_name_bold=0x7f060008;
+        public static final int backend_toast_xmlerror=0x7f060020;
         public static final int c2dm_dialog_msg=0x7f060017;
         public static final int c2dm_dialog_title=0x7f060019;
         /**  Footer String Constants 

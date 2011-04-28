@@ -68,6 +68,7 @@
 	    				  android:layout_weight = "35"
 						  android:textSize = "16px" />
 				<Button android:layout_width = "fill_parent"
+						android:id = "@+id/send"
 					    android:layout_height = "50px"
 						android:textSize = "16px"
 						android:layout_marginLeft = "10px"

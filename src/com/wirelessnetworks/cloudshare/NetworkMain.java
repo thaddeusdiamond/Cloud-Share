@@ -15,7 +15,7 @@ public class NetworkMain extends Activity implements Runnable{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
 		mIntent = getIntent();
-		mResult = mIntent.getStringExtra("network_xml");
+		mResult = mIntent.getStringExtra("networkXml");
 		
 		Thread main = new Thread(this);
 		main.start();

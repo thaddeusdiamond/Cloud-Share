@@ -1,16 +1,13 @@
 package com.wirelessnetworks.cloudshare;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -27,16 +24,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class FindNetwork extends Activity implements Runnable {
 
-	private Toast tempUnavailable, outOfService;
+	private ProgressDialog mProgressDialog;
+    private Toast outOfService;
 	
 	private HttpResponse response;
+	private String mAndroidId;
 	
 	private Location mLocation = null;
     private LocationManager locationManager;
@@ -48,6 +46,15 @@ public class FindNetwork extends Activity implements Runnable {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.find_networks);
+		
+		mAndroidId = getIntent().getStringExtra("androidId");
+		
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setTitle("Detecting Networks in Your Area");
+		mProgressDialog.setMessage(getApplicationContext().getString(R.string.progress_dialog));
+		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(false);
+		mProgressDialog.show();
 		
 		// Acquire initial location
         // --------------------------------------------------------------------------
@@ -61,37 +68,23 @@ public class FindNetwork extends Activity implements Runnable {
               mLocation = location;
               locationManager.removeUpdates(locationListener);
               response = CloudShareUtils.postData("detect", new String[] { "latitude", "longitude" }, new String[] { Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()) });
+              
+              boolean found_networks = false;
               try {
-				processHTTPResponse(response);
-              } catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			  } catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			  } catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			  } catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			  }
+				found_networks = processHTTPResponse(response);
+              } catch (Exception e) {
+            	mHandler.sendEmptyMessage(2);            	 
+              }
 			  
-			  ImageView image = (ImageView) findViewById(R.id.loading_image);
-			  image.setVisibility(View.GONE);
-			  ListView lv = (ListView) findViewById(R.id.network_list);
-		      lv.setVisibility(View.VISIBLE);
-		        
+			  if (found_networks) {
+				  ListView lv = (ListView) findViewById(R.id.network_list);
+				  lv.setVisibility(View.VISIBLE);
+			  }
+			  mProgressDialog.dismiss(); 
             }
 
     		/// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
             public void onStatusChanged(String provider, int status, Bundle extras) {
-            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
-            		tempUnavailable = Toast.makeText(getApplicationContext(),
-            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
-            		tempUnavailable.show();
-            		return;
-            	}
             	if (status == android.location.LocationProvider.OUT_OF_SERVICE) {
             		outOfService = Toast.makeText(getApplicationContext(),
             				R.string.gps_toast_outofservice, Toast.LENGTH_LONG);
@@ -135,7 +128,8 @@ public class FindNetwork extends Activity implements Runnable {
 			mHandler.sendEmptyMessage(0);
 	}
 	
-	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
+	private boolean processHTTPResponse(HttpResponse response) throws Exception {
+		boolean found_networks = false;
 		try {
 			String result = CloudShareUtils.parseHttpResponse(response);
 			Document doc = CloudShareUtils.getDOMbody(result);
@@ -170,33 +164,37 @@ public class FindNetwork extends Activity implements Runnable {
 		        lv.setAdapter(n_adapter);
 		        lv.setOnItemClickListener(new OnItemClickListener() {
 		          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		        	
-		            // When clicked, launch the view activity (AND HANDLE JOINING... PERHAPS A JOIN SERVICE???)
-		            Intent network_main = new Intent(getApplicationContext(), NetworkMain.class);
-		            network_main.putExtra("network_id", ((TextView) view.findViewById(R.id.network_id)).getText());
-		            startActivity(network_main);
+		        	// When clicked, launch the join the network activity (prompt for username)
+		            Intent networkMain = new Intent(getApplicationContext(), JoinNetwork.class);
+		            networkMain.putExtra("network_id", ((TextView) view.findViewById(R.id.network_id)).getText());
+		            networkMain.putExtra("u_unique_id", mAndroidId);
+		            networkMain.putExtra("latitude", Double.toString(mLocation.getLatitude()));
+		            networkMain.putExtra("longitude", Double.toString(mLocation.getLongitude()));
+		            startActivity(networkMain);
 		          }
 		        });
-		        
+		        found_networks = true;
 		    } else {
 		    	mHandler.sendEmptyMessage(1);
 		    }
 		    
 		} catch (Exception e) {
-			Log.v("PARSE ERROR", e.getMessage());
+			throw e;
 		}
+		return found_networks;
 	}
 	
 	private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
         	TextView text = (TextView) findViewById(R.id.join_error_msg);
-			ImageView image = (ImageView) findViewById(R.id.loading_image);
 			if (msg.what == 1)
 				text.setText("No networks were found in your area.  Please create one from the home page, or try again later.");
+			else if (msg.what == 2)
+				text.setText("There was an error communicating with the server.  Please make sure your internet is enabled and try again.");
 			text.setVisibility(View.VISIBLE);
-			image.setVisibility(View.GONE);
 			
-			locationManager.removeUpdates(locationListener);
+			mProgressDialog.dismiss(); 
+		    locationManager.removeUpdates(locationListener);
         }
 	};
 	

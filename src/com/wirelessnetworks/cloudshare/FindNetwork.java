@@ -163,7 +163,8 @@ public class FindNetwork extends Activity implements Runnable {
 	        lv.setTextFilterEnabled(true);
 	        
 	        // Now create a simple cursor adapter and set it to display
-	        ArrayAdapter network_name_adapter = 
+	        @SuppressWarnings({ "rawtypes", "unchecked" })
+			ArrayAdapter network_name_adapter = 
 	        	    new ArrayAdapter(this, R.layout.network_item, R.id.network_title, network_names);
 	        lv.setAdapter(network_name_adapter);
 		    

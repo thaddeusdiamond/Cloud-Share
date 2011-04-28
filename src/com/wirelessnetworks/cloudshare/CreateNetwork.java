@@ -1,6 +1,14 @@
 package com.wirelessnetworks.cloudshare;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
 import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,12 +18,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class CreateNetwork extends Activity {
 
@@ -30,6 +45,7 @@ public class CreateNetwork extends Activity {
     private LocationListener locationListener;
     private Intent alertIntent;
     private SharedPreferences regPreference;
+    private Thread post;
     
 	
 	// MAKE SURE TO CHECK THAT ALL DATA IS VALID BEFORE POSTING
@@ -81,8 +97,19 @@ public class CreateNetwork extends Activity {
 					regKeyNull.show();
 					return;
 				}
-				response = CloudShareUtils.postData("create", new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
-						new String[] {networkName, username, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()), androidId , "Android", registrationKey});
+				post = new Thread (new Runnable () {
+					@Override
+					public void run() {
+						response = CloudShareUtils.postData("create", new String[] {"n_name",  "u_name", "latitude", "longitude", "u_unique_id", "u_platform", "u_registration_id"},
+								new String[] {networkName, username, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude()), androidId , "Android", registrationKey});
+						mHandler.sendEmptyMessage(0);
+					}
+				});
+				post.start();
+				
+				int i;
+				i = 45;
+				i = 45;
 			}
 		});
 
@@ -138,6 +165,42 @@ public class CreateNetwork extends Activity {
         // ----------------------------------------------------------------------------
 
 		
+	}
+	
+	private Handler mHandler = new Handler (){
+		// Check that the response from the server was appropriate and start the next activity
+		public void handleMessage (Message msg) {
+			try {
+				processHTTPResponse(response);
+              } catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			  } catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			  } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			  } catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			  }
+            }
+	};
+	
+	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
+		try {
+			Document doc = CloudShareUtils.getDOMbody(response);
+		    
+		    //Beginning information
+		    doc.getDocumentElement().normalize();
+		    NodeList network = doc.getElementsByTagName("network");
+		    int i;
+		    i = 34;
+		    
+		} catch (Exception e) {
+			Log.v("PARSE ERROR", e.getMessage());
+		}
 	}
 	
 }

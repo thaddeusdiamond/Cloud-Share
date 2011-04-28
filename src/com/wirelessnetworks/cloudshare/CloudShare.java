@@ -59,7 +59,7 @@ public class CloudShare extends Activity implements Runnable {
         	
         	// The following represent the buttons, classes to launch and layouts
             Button[] buttons = { mSearchNetwork, mCreateNetwork, mAbout };
-            Class<?>[] classes = { FindNetworks.class, CreateNetwork.class, AboutUs.class };
+            Class<?>[] classes = { FindNetwork.class, CreateNetwork.class, AboutUs.class };
             int[] layouts = { R.id.launch_search, R.id.launch_create, R.id.launch_about };
             
             // The following are final variables accessible inside listeners

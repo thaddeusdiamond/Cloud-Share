@@ -1,8 +1,15 @@
 package com.wirelessnetworks.cloudshare;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -12,7 +19,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
+import android.util.Log;
 
 public class CloudShareUtils {
 
@@ -41,6 +52,8 @@ public class CloudShareUtils {
 		return null;
 	}
 	
+	
+	
 	public static String[] getDOMresults(Element parent, String[] fields) {
 		String[] child_values = new String[fields.length];
 		
@@ -56,4 +69,30 @@ public class CloudShareUtils {
 	    return el.getElementsByTagName(tag).item(0).getChildNodes().item(0).getNodeValue();    
 	 }
 	
+	public static Document getDOMbody(HttpResponse response) {
+		Document doc = null;
+		try {
+			// Parse the xml input resulting from a refresh post
+			StringBuilder results = new StringBuilder();
+			InputStream xml_input = response.getEntity().getContent();
+			BufferedReader xml_reader = new BufferedReader(new InputStreamReader(xml_input), 8192);
+			String result = null;
+			while ((result = xml_reader.readLine()) != null) {
+				results.append(result);
+			}
+			xml_reader.close();
+			
+			
+			StringReader reader = new StringReader( results.toString() );
+			InputSource inputSource = new InputSource( reader );
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		    doc = dBuilder.parse(inputSource);
+		    reader.close();
+		} catch (Exception e) {
+			Log.v("PARSE ERROR", e.getMessage());
+		}
+	    
+		return doc;
+	}
 }

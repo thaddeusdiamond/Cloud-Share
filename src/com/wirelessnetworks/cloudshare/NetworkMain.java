@@ -7,7 +7,8 @@ public class NetworkMain extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.network_main);
 	}
 	
 }

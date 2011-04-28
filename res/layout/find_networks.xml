@@ -14,7 +14,7 @@
   	android:layout_marginTop = "20px"
   	android:orientation = "horizontal"
   	android:layout_gravity = "center"
-  	android:gravity = "center"
+  	android:gravity = "top"
   	android:paddingLeft = "20px"
   	android:paddingRight = "20px" >
   		<ImageView
@@ -25,7 +25,7 @@
   			
 		<TextView
 		  	android:id = "@+id/join_error_msg"
-		  	android:text = "There was an error retrieving your location or no networks could be found.  Please try again later."
+		  	android:text = "There was an error retrieving your location.  Please try again later."
 		  	android:textSize = "24px"
 		  	android:textColor = "@color/black"
 		  	android:gravity = "center"

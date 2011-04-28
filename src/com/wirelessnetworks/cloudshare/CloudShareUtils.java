@@ -71,7 +71,6 @@ public class CloudShareUtils {
 	public static Document getDOMbody(HttpResponse response) {
 		Document doc = null;
 		try {
-			
 			// Parse the xml input resulting from a refresh post
 			BufferedReader xml_reader = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
             StringBuffer results = new StringBuffer("");

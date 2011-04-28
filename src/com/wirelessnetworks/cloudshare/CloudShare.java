@@ -32,8 +32,17 @@ public class CloudShare extends Activity implements Runnable {
         Thread main = new Thread(this);
         main.start();
     }
-    
-
+    @Override
+    public void onRestart() {
+    	super.onRestart();
+    	if (!regKeyExists) {
+    		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+    		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+    		registrationIntent.putExtra("sender", this.getString(R.string.senderID));
+    		startService(registrationIntent);
+    	}
+    	return;
+    }
     
     public void run() {
         /********** PERFORM INITIAL BACKGROUND LOADING WHILE SPLASH SCREEN NOT YET UP
@@ -45,7 +54,6 @@ public class CloudShare extends Activity implements Runnable {
     		registrationIntent.putExtra("sender", this.getString(R.string.senderID));
     		startService(registrationIntent);
     	}
-    	
         mHandler.sendEmptyMessage(0);
     }
     

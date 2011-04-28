@@ -1,7 +1,6 @@
 package com.wirelessnetworks.cloudshare;
 
 import java.io.IOException;
-
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
@@ -12,7 +11,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -23,7 +21,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -77,6 +74,12 @@ public class FindNetwork extends Activity implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			  }
+			  
+			  ImageView image = (ImageView) findViewById(R.id.loading_image);
+			  image.setVisibility(View.GONE);
+			  ListView lv = (ListView) findViewById(R.id.network_list);
+		      lv.setVisibility(View.VISIBLE);
+		        
             }
 
     		/// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
@@ -132,7 +135,8 @@ public class FindNetwork extends Activity implements Runnable {
 	
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		try {
-			Document doc = CloudShareUtils.getDOMbody(response);
+			String result = CloudShareUtils.parseHttpResponse(response);
+			Document doc = CloudShareUtils.getDOMbody(result);
 		    
 		    //Beginning information
 		    doc.getDocumentElement().normalize();
@@ -160,7 +164,9 @@ public class FindNetwork extends Activity implements Runnable {
 	        lv.setTextFilterEnabled(true);
 	        
 	        // Now create a simple cursor adapter and set it to display
-	        ArrayAdapter network_name_adapter = new ArrayAdapter(this, R.layout.network_item, R.id.network_title, network_names);
+	        @SuppressWarnings({ "rawtypes", "unchecked" })
+			ArrayAdapter network_name_adapter = 
+	        	    new ArrayAdapter(this, R.layout.network_item, R.id.network_title, network_names);
 	        lv.setAdapter(network_name_adapter);
 		    
 		    

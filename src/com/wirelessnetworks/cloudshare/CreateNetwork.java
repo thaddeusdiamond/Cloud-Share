@@ -1,16 +1,14 @@
 package com.wirelessnetworks.cloudshare;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,28 +22,25 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class CreateNetwork extends Activity {
 
 	private String networkName, username, androidId = null, registrationKey = null;
 	private Button createNetwork;
-	private Toast networkNull, usernameNull, locationNull, tempUnavailable, outOfService,
-			androidIdNull, regKeyNull;
+	private Toast networkNull, usernameNull, locationNull, outOfService,
+			androidIdNull, regKeyNull, backendXMLError;
 	HttpResponse response;
 	
 	private Location mLocation = null;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Intent alertIntent;
+    private Intent alertIntent, mainIntent;
     private SharedPreferences regPreference;
     private Thread post;
+    private ProgressDialog mProgressDialog;
     
 	
 	// MAKE SURE TO CHECK THAT ALL DATA IS VALID BEFORE POSTING
@@ -56,6 +51,9 @@ public class CreateNetwork extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_network);
+		
+		mProgressDialog = new ProgressDialog(this);
+		
 		createNetwork = (Button) findViewById (R.id.create_network);
 		createNetwork.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -105,11 +103,13 @@ public class CreateNetwork extends Activity {
 						mHandler.sendEmptyMessage(0);
 					}
 				});
-				post.start();
+				mProgressDialog.setTitle("Creating Network");
+				mProgressDialog.setMessage("Please do not exit the application at this time");
+				mProgressDialog.setIndeterminate(true);
+				mProgressDialog.setCancelable(false);
+				mProgressDialog.show();
 				
-				int i;
-				i = 45;
-				i = 45;
+				post.start();
 			}
 		});
 
@@ -128,12 +128,13 @@ public class CreateNetwork extends Activity {
 
     		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
             public void onStatusChanged(String provider, int status, Bundle extras) {
-            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
-            		tempUnavailable = Toast.makeText(getApplicationContext(),
-            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
-            		tempUnavailable.show();
-            		return;
-            	}
+//            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
+//            		// THIS IS A BUG BECAUSE THIS COMES UP WHEN A NEW LOCATION IS AVAILABLE
+//            		tempUnavailable = Toast.makeText(getApplicationContext(),
+//            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
+//            		tempUnavailable.show();
+//            		return;
+//            	}
             	if (status == android.location.LocationProvider.OUT_OF_SERVICE) {
             		outOfService = Toast.makeText(getApplicationContext(),
             				R.string.gps_toast_outofservice, Toast.LENGTH_LONG);
@@ -185,22 +186,33 @@ public class CreateNetwork extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			  }
+			  mProgressDialog.dismiss();
+			  return;
             }
 	};
 	
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		try {
-			Document doc = CloudShareUtils.getDOMbody(response);
+			String result = CloudShareUtils.parseHttpResponse(response);
+			Document doc = CloudShareUtils.getDOMbody(result);
 		    
-		    //Beginning information
 		    doc.getDocumentElement().normalize();
-		    NodeList network = doc.getElementsByTagName("network");
-		    int i;
-		    i = 34;
-		    
+		    NodeList error = doc.getElementsByTagName("error");
+		    // An error XML file was returned
+		    if (error.getLength() > 0) {
+		    	backendXMLError = Toast.makeText(getApplicationContext(),
+		    			R.string.backend_toast_xmlerror, Toast.LENGTH_SHORT);
+		    	backendXMLError.show();
+		    	finish ();
+		    	return;
+		    }
+		  mainIntent = new Intent (this, NetworkMain.class);
+		  mainIntent.putExtra("network_xml", result);
+		  startActivity(mainIntent);
 		} catch (Exception e) {
 			Log.v("PARSE ERROR", e.getMessage());
 		}
+		return;
 	}
 	
 }

@@ -121,7 +121,7 @@ public class CloudShareUtils {
 		double latPoint = location.getLatitude();
         double lngPoint = location.getLongitude();
 
-        Geocoder reverseGeo = new Geocoder(context, Locale.getDefault());
+        Geocoder reverseGeo = new Geocoder(context);
         List<Address> curLocationList;
         String locString = "";
         if (reverseGeo != null){

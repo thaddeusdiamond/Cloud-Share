@@ -56,6 +56,7 @@
 	    <string name="gps_toast_outofservice">Your GPS provider is out of service.</string>
 	    <string name="androidid_toast_null">Your android ID is not defined. You cannot use this application.</string>
 	    <string name="regkey_toast_null">The application has failed to retreive a valid C2DM registration key. Please wait a few seconds and try again.</string>
+	    <string name="backend_toast_xmlerror">There was an error on the backend when creating the network</string>
     
     
 </resources>

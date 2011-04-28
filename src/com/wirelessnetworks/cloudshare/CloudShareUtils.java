@@ -51,7 +51,10 @@ public class CloudShareUtils {
 	        // TODO Auto-generated catch block
 	    }
 		return response;
+		
 	}
+	
+	
 	
 	public static String[] getDOMresults(Element parent, String[] fields) {
 		String[] child_values = new String[fields.length];
@@ -59,28 +62,18 @@ public class CloudShareUtils {
 		//Pull out the item's information
 		for (int i = 0; i < fields.length; i++)
 			child_values[i] = getTagValue(fields[i], parent);
-		
 		return child_values;
 	}
 	
 	// Get a single tag from a DOM element
-	private static String getTagValue(String tag, Element el){
+	public static String getTagValue(String tag, Element el){
 	    return el.getElementsByTagName(tag).item(0).getChildNodes().item(0).getNodeValue();    
 	 }
 	
-	public static Document getDOMbody(HttpResponse response) {
+	public static Document getDOMbody(String response) {
 		Document doc = null;
 		try {
-			// Parse the xml input resulting from a refresh post
-			BufferedReader xml_reader = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
-            StringBuffer results = new StringBuffer("");
-            String line;
-            while ((line = xml_reader.readLine()) != null) {
-                results.append(line);
-            }
-            xml_reader.close();
-            
-            StringReader reader = new StringReader( results.toString() );
+			StringReader reader = new StringReader (response);
 			InputSource inputSource = new InputSource( reader );
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -91,5 +84,21 @@ public class CloudShareUtils {
 		}
 	    
 		return doc;
+	}
+	
+	public static String parseHttpResponse(HttpResponse response) {
+		// Parse the xml input resulting from a refresh post
+		StringBuffer results = new StringBuffer("");
+        try {
+			BufferedReader xml_reader = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+	        String line;
+	        while ((line = xml_reader.readLine()) != null) {
+	            results.append(line);
+	        }
+	        xml_reader.close();
+		} catch (Exception e) {
+			Log.v("PARSE ERROR", e.getMessage());
+		}
+		return results.toString();
 	}
 }

@@ -33,6 +33,9 @@ public class CloudShareAlert extends Activity {
 		    	 finish ();
 		     } 
 	    });
+    	
+    	
+    	
     	builder.create().show();
     }
 }

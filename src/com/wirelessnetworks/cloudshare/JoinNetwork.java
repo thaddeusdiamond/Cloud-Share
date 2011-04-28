@@ -1,8 +1,6 @@
 package com.wirelessnetworks.cloudshare;
 
 import org.apache.http.HttpResponse;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -61,7 +59,7 @@ public class JoinNetwork extends Activity {
 									new String[] { mIntent.getStringExtra("network_id"), username, mRegistrationKey, "Android", mIntent.getStringExtra("u_unique_id"), mIntent.getStringExtra("latitude"), mIntent.getStringExtra("longitude") });
 						String result;
 						try {
-							result = checkErrors(response);
+							result = CloudShareUtils.checkErrors(response);
 			            } catch (Exception e) {
 							mProgressDialog.dismiss();
 			            	serverError.show();
@@ -73,22 +71,11 @@ public class JoinNetwork extends Activity {
 			            startActivity(networkMain);
 
 						mProgressDialog.dismiss();
+						finish ();
 					}
 				}).start();
 				
 			}
 		});
 	}
-	
-	private String checkErrors(HttpResponse response) throws Exception {
-		String result = CloudShareUtils.parseHttpResponse(response);
-		Document doc = CloudShareUtils.getDOMbody(result);
-		
-		NodeList errors = doc.getElementsByTagName("error");
-		if (errors.getLength() > 0)
-			throw new Exception();
-		
-		return result;
-	}
-
 }

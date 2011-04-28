@@ -25,7 +25,7 @@ public class NetworkMain extends Activity implements Runnable{
 		latitude, longitude, network_id, android_id;
 	private Document mDoc;
 	private Button send;
-	private String [] member_names, member_latitudes, member_longitudes,
+	private String [] member_names, member_locations,
 		member_fields = {"name", "latitude", "longitude"};
 	private NodeList networks, members;
 	private Node network, member;
@@ -47,7 +47,10 @@ public class NetworkMain extends Activity implements Runnable{
         // --------------------------------------------------------------------------
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
+        mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        latitude = Double.toString(mLocation.getLatitude());
+        longitude = Double.toString(mLocation.getLongitude());
+        
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
@@ -83,9 +86,6 @@ public class NetworkMain extends Activity implements Runnable{
 		    	startActivity (alertIntent);
             }
           };
-
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 100, locationListener);
         // ----------------------------------------------------------------------------
 		
 		Thread main = new Thread(this);
@@ -111,8 +111,7 @@ public class NetworkMain extends Activity implements Runnable{
 		members = network_element.getElementsByTagName("member");
 		if (members.getLength() > 0) {
 			member_names = new String[members.getLength()];
-			member_latitudes = new String[members.getLength()];
-			member_longitudes = new String[members.getLength()];
+			member_locations = new String[members.getLength()];
 			for (int i = 0; i < members.getLength(); i++) {
 				member = members.item(i);
 				if (member.getNodeType() == Node.ELEMENT_NODE) {
@@ -120,8 +119,11 @@ public class NetworkMain extends Activity implements Runnable{
 					String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
 					// NEED TO ADD TO LIST HERE
 					member_names[i] = information[0];
-					member_latitudes[i] = information[1];
-					member_longitudes[i] = information[2];
+					try {
+						member_locations[i] = CloudShareUtils.reverseLocation(getApplicationContext(), information[1], information[2]);
+					} catch (Exception e) {
+						member_locations[i] = "Location Unavailable";
+					}
 				}
 			}
 		}
@@ -136,4 +138,29 @@ public class NetworkMain extends Activity implements Runnable{
 			setContentView(R.layout.network_main);
 		}
 	};
+	
+	@Override
+	protected void onPause () {
+		super.onPause();
+		locationManager.removeUpdates(locationListener);
+		return;
+	}
+	
+	@Override
+	protected void onResume () {
+		super.onResume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 100, locationListener);
+	}
+	
+	@Override
+	protected void onDestroy () {
+		super.onDestroy();
+		Intent leaveIntent = new Intent (NetworkMain.this, LeaveNetwork.class);
+		leaveIntent.putExtra("network_id", network_id);
+		leaveIntent.putExtra("u_unique_id", android_id);
+		leaveIntent.putExtra("latitude", latitude);
+		leaveIntent.putExtra("longitude", longitude);
+		startService(leaveIntent);
+	}
+	
 }

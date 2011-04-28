@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import android.util.Log;
@@ -98,5 +99,16 @@ public class CloudShareUtils {
 			Log.v("PARSE ERROR", e.getMessage());
 		}
 		return results.toString();
+	}
+	
+	public static String checkErrors(HttpResponse response) throws Exception {
+		String result = CloudShareUtils.parseHttpResponse(response);
+		Document doc = CloudShareUtils.getDOMbody(result);
+		
+		NodeList errors = doc.getElementsByTagName("error");
+		if (errors.getLength() > 0)
+			throw new Exception();
+		
+		return result;
 	}
 }

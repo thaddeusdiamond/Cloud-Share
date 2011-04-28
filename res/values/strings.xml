@@ -53,13 +53,13 @@
 	    <string name="registration_key">C2DM_REGISTRATION_KEY</string>
 	    <string name="c2dm_dialog_msg">There was an error connecting to the live update service.  Make sure you have enabled a Google Account for this device and your password is correct.</string>
 	    <string name="c2dm_dialog_title">Registration Error</string>
-	    <string name="regkey_toast_null">The application has failed to retreive a valid C2DM registration key. Please wait a few seconds and try again.</string>
+	    <string name="regkey_toast_null">The application has failed to retrieve a valid C2DM registration key. Please wait a few seconds and try again.</string>
 	    
     <!--  Android ID String Constants -->
-	    <string name="androidid_toast_null">Your android ID is not defined. You cannot use this application.</string>
+	    <string name="androidid_toast_null">Your Android ID is not defined. You cannot use this application.</string>
 	    
 	<!--  Server Response String Constants -->
-	    <string name="backend_toast_xmlerror">There was an error on the backend when creating the network</string>
+	    <string name="backend_toast_xmlerror">There was an error on the server while attempting to create the network.  Please make sure you are connnected to the internet and try again</string>
     
 	<!--  Location Manager String Constants -->
 	    <string name="location_toast_null">Your location could not be fetched. Please wait a few more seconds and then try again.</string>

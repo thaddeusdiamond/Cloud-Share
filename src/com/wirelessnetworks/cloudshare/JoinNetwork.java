@@ -37,7 +37,7 @@ public class JoinNetwork extends Activity {
 		mProgressDialog.setMessage(getString(R.string.progress_dialog));
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setCancelable(false);
-		serverError = Toast.makeText(this, "There was an error joining this network", Toast.LENGTH_LONG);
+		serverError = Toast.makeText(this, "There was an error joining this network, please try again", Toast.LENGTH_LONG);
 		
 		mTextView = (TextView) findViewById(R.id.username);
 	    mButton = (Button) findViewById(R.id.join_network);

@@ -184,7 +184,6 @@ public class CreateNetwork extends Activity {
 				e.printStackTrace();
 			  }
 			  mProgressDialog.dismiss();
-			  finish();
             }
 	};
 	
@@ -200,7 +199,8 @@ public class CreateNetwork extends Activity {
 		
 		mainIntent = new Intent (this, NetworkMain.class);
 		mainIntent.putExtra("networkXml", result);
-		startActivity(mainIntent);
+		startActivity(mainIntent);	
+		finish();
 	}
 	
 }

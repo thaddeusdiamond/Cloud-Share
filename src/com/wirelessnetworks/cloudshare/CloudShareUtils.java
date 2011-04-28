@@ -2,7 +2,6 @@ package com.wirelessnetworks.cloudshare;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -27,29 +26,32 @@ import android.util.Log;
 
 public class CloudShareUtils {
 
-	private static String route_url = "http://cloudshareroute.appspot.com";
+	private static String route_url = "https://cloudshareroute.appspot.com/";
 	
 	public static HttpResponse postData(String path, String[] parameters, String[] values) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost(route_url + "/" + path);
-
+	    HttpPost httppost = new HttpPost(route_url + path);
+	    HttpResponse response = null;
+	    
 	    try {
 	        // Add data to be sent
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        for (int i = 0; i < parameters.length; i++)
+	    	nameValuePairs.add(new BasicNameValuePair("authtoken", "REDACTED"));
+        	for (int i = 0; i < parameters.length; i++)
 	        	nameValuePairs.add(new BasicNameValuePair(parameters[i], values[i]));
         	httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
-	        return httpclient.execute(httppost);
+	        response =  httpclient.execute(httppost);
 	        
 	    } catch (ClientProtocolException e) {
 	        // TODO Auto-generated catch block
 	    } catch (IOException e) {
 	        // TODO Auto-generated catch block
 	    }
-		return null;
+		return response;
+		
 	}
 	
 	
@@ -60,30 +62,18 @@ public class CloudShareUtils {
 		//Pull out the item's information
 		for (int i = 0; i < fields.length; i++)
 			child_values[i] = getTagValue(fields[i], parent);
-		
 		return child_values;
 	}
 	
 	// Get a single tag from a DOM element
-	private static String getTagValue(String tag, Element el){
+	public static String getTagValue(String tag, Element el){
 	    return el.getElementsByTagName(tag).item(0).getChildNodes().item(0).getNodeValue();    
 	 }
 	
-	public static Document getDOMbody(HttpResponse response) {
+	public static Document getDOMbody(String response) {
 		Document doc = null;
 		try {
-			// Parse the xml input resulting from a refresh post
-			StringBuilder results = new StringBuilder();
-			InputStream xml_input = response.getEntity().getContent();
-			BufferedReader xml_reader = new BufferedReader(new InputStreamReader(xml_input), 8192);
-			String result = null;
-			while ((result = xml_reader.readLine()) != null) {
-				results.append(result);
-			}
-			xml_reader.close();
-			
-			
-			StringReader reader = new StringReader( results.toString() );
+			StringReader reader = new StringReader (response);
 			InputSource inputSource = new InputSource( reader );
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -94,5 +84,21 @@ public class CloudShareUtils {
 		}
 	    
 		return doc;
+	}
+	
+	public static String parseHttpResponse(HttpResponse response) {
+		// Parse the xml input resulting from a refresh post
+		StringBuffer results = new StringBuffer("");
+        try {
+			BufferedReader xml_reader = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+	        String line;
+	        while ((line = xml_reader.readLine()) != null) {
+	            results.append(line);
+	        }
+	        xml_reader.close();
+		} catch (Exception e) {
+			Log.v("PARSE ERROR", e.getMessage());
+		}
+		return results.toString();
 	}
 }

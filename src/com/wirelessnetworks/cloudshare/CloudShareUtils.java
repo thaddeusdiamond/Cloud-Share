@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -117,16 +116,41 @@ public class CloudShareUtils {
 		return result;
 	}
 	
+	
+	/*						MASSIVELY OVERLOADED REVERSE LOCATION PLUG N PLAY METHODS						*/
 	public static String reverseLocation(Context context, Location location) throws Exception {
-		double latPoint = location.getLatitude();
-        double lngPoint = location.getLongitude();
+		double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
 
-        Geocoder reverseGeo = new Geocoder(context);
+        String result;
+        try {
+        	result = reverseLocation(context, latitude, longitude);
+        } catch (Exception e) {
+        	throw e;
+        }
+        return result;
+	}
+	
+	public static String reverseLocation(Context context, String latitudeString, String longitudeString) throws Exception {
+		double latitude = Double.parseDouble(latitudeString);
+        double longitude = Double.parseDouble(longitudeString);
+
+        String result;
+        try {
+        	result = reverseLocation(context, latitude, longitude);
+        } catch (Exception e) {
+        	throw e;
+        }
+        return result;
+	}
+	
+	public static String reverseLocation(Context context, double latitude, double longitude) throws Exception {
+		Geocoder reverseGeo = new Geocoder(context);
         List<Address> curLocationList;
         String locString = "";
         if (reverseGeo != null){
             try {
-                curLocationList = reverseGeo.getFromLocation(latPoint, lngPoint, 1);
+                curLocationList = reverseGeo.getFromLocation(latitude, longitude, 1);
             } catch (Exception e) {
                 throw e;
             }

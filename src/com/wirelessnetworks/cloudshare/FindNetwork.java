@@ -74,6 +74,12 @@ public class FindNetwork extends Activity implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			  }
+			  
+			  ImageView image = (ImageView) findViewById(R.id.loading_image);
+			  image.setVisibility(View.GONE);
+			  ListView lv = (ListView) findViewById(R.id.network_list);
+		      lv.setVisibility(View.VISIBLE);
+		        
             }
 
     		/// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled

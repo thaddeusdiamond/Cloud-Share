@@ -28,24 +28,23 @@ public final class R {
     public static final class id {
         public static final int create_network=0x7f080006;
         public static final int footer=0x7f080001;
-        public static final int frameLayout1=0x7f080008;
+        public static final int frameLayout1=0x7f080007;
         public static final int header=0x7f080000;
-        public static final int imageView1=0x7f08000a;
-        public static final int launch_about=0x7f08000d;
-        public static final int launch_create=0x7f08000c;
-        public static final int launch_search=0x7f08000b;
-        public static final int loading_image=0x7f080007;
+        public static final int imageView1=0x7f080009;
+        public static final int launch_about=0x7f08000c;
+        public static final int launch_create=0x7f08000b;
+        public static final int launch_search=0x7f08000a;
         public static final int networkName=0x7f080004;
-        public static final int network_chat_area=0x7f080011;
-        public static final int network_owner=0x7f08000f;
-        public static final int network_title=0x7f08000e;
-        public static final int separator=0x7f080010;
-        public static final int textView1=0x7f080009;
+        public static final int network_chat_area=0x7f080010;
+        public static final int network_owner=0x7f08000e;
+        public static final int network_title=0x7f08000d;
+        public static final int separator=0x7f08000f;
+        public static final int textView1=0x7f080008;
         public static final int username=0x7f080005;
         public static final int widget_layout=0x7f080002;
         public static final int widget_main=0x7f080003;
-        public static final int widget_recent1=0x7f080012;
-        public static final int widget_recent2=0x7f080013;
+        public static final int widget_recent1=0x7f080011;
+        public static final int widget_recent2=0x7f080012;
     }
     public static final class layout {
         public static final int about_us=0x7f030000;

@@ -18,6 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,13 +29,8 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-public class FindNetworks extends ListActivity {
+public class FindNetworks extends Activity {
 
 	private HttpResponse response;
 	
@@ -109,7 +105,6 @@ public class FindNetworks extends ListActivity {
         // ----------------------------------------------------------------------------
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		try {
 			// Parse the xml input resulting from a refresh post
@@ -151,29 +146,11 @@ public class FindNetworks extends ListActivity {
 		    	    network_createds[i] = information[5];
 		    	}
 		    }
-		    
-		    // Now create a simple cursor adapter and set it to display
-	        ArrayAdapter network_name_adapter = 
-	        	    new ArrayAdapter(this, R.layout.network_item, R.id.network_title, network_names);
-	        setListAdapter(network_name_adapter);
-		    
-		    ListView lv = getListView();
-	        lv.setTextFilterEnabled(true);
-
-	        lv.setOnItemClickListener(new OnItemClickListener() {
-	          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        	
-	            // When clicked, launch the view activity
-	            Intent network_main = new Intent(getApplicationContext(), NetworkMain.class);
-	            
-	            startActivity(network_main);
-	          }
-	        });
-		    
+		    int i;
+		    i = 45;
+		    i = 45;
 		} catch (Exception e) {
 			Log.v("PARSE ERROR", e.getMessage());
 		}
 	}
-	
-	
 }

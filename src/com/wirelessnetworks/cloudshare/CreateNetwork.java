@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,7 +26,7 @@ import android.widget.Toast;
 
 public class CreateNetwork extends Activity {
 
-	private String networkName, username, androidId = null, registrationKey = null;
+	private String networkName, username, savedName = null, androidId = null, registrationKey = null;
 	private Button createNetwork;
 	private Toast networkNull, usernameNull, locationNull, outOfService,
 			androidIdNull, regKeyNull, backendXMLError;
@@ -35,7 +36,7 @@ public class CreateNetwork extends Activity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Intent alertIntent, mainIntent;
-    private SharedPreferences regPreference;
+    private SharedPreferences regPreference, namePreference;
     private Thread post;
     private ProgressDialog mProgressDialog;
     
@@ -50,6 +51,13 @@ public class CreateNetwork extends Activity {
 		setContentView(R.layout.create_network);
 		
 		mProgressDialog = new ProgressDialog(this);
+		
+		namePreference = getSharedPreferences(getString(R.string.name_preference), Context.MODE_PRIVATE);
+		savedName = namePreference.getString(getString (R.string.saved_name), null);
+		if (savedName != null && savedName.length() > 0) {
+			EditText username_input = (EditText) findViewById (R.id.username);
+			username_input.setText(savedName);
+		}
 		
 		createNetwork = (Button) findViewById (R.id.create_network);
 		createNetwork.setOnClickListener(new View.OnClickListener() {
@@ -125,18 +133,10 @@ public class CreateNetwork extends Activity {
 
     		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
             public void onStatusChanged(String provider, int status, Bundle extras) {
-//            	if (status == android.location.LocationProvider.TEMPORARILY_UNAVAILABLE) {
-//            		// THIS IS A BUG BECAUSE THIS COMES UP WHEN A NEW LOCATION IS AVAILABLE
-//            		tempUnavailable = Toast.makeText(getApplicationContext(),
-//            				R.string.gps_toast_tempunavailable, Toast.LENGTH_LONG);
-//            		tempUnavailable.show();
-//            		return;
-//            	}
             	if (status == android.location.LocationProvider.OUT_OF_SERVICE) {
             		outOfService = Toast.makeText(getApplicationContext(),
             				R.string.gps_toast_outofservice, Toast.LENGTH_LONG);
             		outOfService.show();
-            		finish ();
             		return;
             	}
             }
@@ -200,6 +200,12 @@ public class CreateNetwork extends Activity {
 		mainIntent = new Intent (this, NetworkMain.class);
 		mainIntent.putExtra("networkXml", result);
 		startActivity(mainIntent);	
+		
+		Editor editor =
+            getApplicationContext().getSharedPreferences(getApplicationContext().getString (R.string.name_preference), Context.MODE_PRIVATE).edit();
+        editor.putString(getApplicationContext().getString(R.string.saved_name), username);
+		editor.commit();
+		
 		finish();
 	}
 	

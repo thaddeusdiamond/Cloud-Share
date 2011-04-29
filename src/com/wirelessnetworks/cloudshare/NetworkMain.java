@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,11 +17,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NetworkMain extends Activity implements Runnable{
-	private Intent mIntent, alertIntent;
+	private Intent mIntent, alertIntent, leaveIntent;
 	private String mResult, network_name, num_members, created_at,
 		latitude, longitude, network_id, android_id;
 	private Document mDoc;
@@ -119,11 +126,7 @@ public class NetworkMain extends Activity implements Runnable{
 					String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
 					// NEED TO ADD TO LIST HERE
 					member_names[i] = information[0];
-					try {
-						member_locations[i] = CloudShareUtils.reverseLocation(getApplicationContext(), information[1], information[2]);
-					} catch (Exception e) {
-						member_locations[i] = "Location Unavailable";
-					}
+					member_locations[i] = CloudShareUtils.reverseLocation(getApplicationContext(), information[1], information[2]);
 				}
 			}
 		}
@@ -136,8 +139,57 @@ public class NetworkMain extends Activity implements Runnable{
 	private Handler mHandler = new Handler () {
 		public void handleMessage (Message msg) {
 			setContentView(R.layout.network_main);
+			
+			TextView header_view = (TextView) findViewById(R.id.header_text);
+			header_view.setText(header_view.getText() + " - " + network_name);
+			TextView num_members_view = (TextView) findViewById(R.id.num_members);
+			num_members_view.setText(num_members + " Users Active");
+			TextView created_at_view = (TextView) findViewById(R.id.network_created);
+			created_at_view.setText(created_at);
+			
+			ListView lv = (ListView) findViewById(R.id.members_list);
+	        lv.setTextFilterEnabled(true);
+	        
+	        MemberAdapter m_adapter = new MemberAdapter(getApplicationContext(), R.id.member_name, member_names, member_locations);
+	        lv.setAdapter(m_adapter);
 		}
 	};
+	
+	
+	private class MemberAdapter extends ArrayAdapter<String> {
+
+		private String[] member_names;
+	    private String[] member_locations;
+	    
+        public MemberAdapter(Context context, int textViewResourceId, String[] member_names, String[] member_locations) {
+                super(context, textViewResourceId, member_names);
+                this.member_names = member_names;
+                this.member_locations = member_locations;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+                View v = convertView;
+                if (v == null) {
+                    LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    v = vi.inflate(R.layout.member_item, null);
+                }
+                String m_name = member_names[position];
+                String m_location = member_locations[position];
+                
+                if (m_name != null) {
+                        TextView name = (TextView) v.findViewById(R.id.member_name);
+                        TextView location = (TextView) v.findViewById(R.id.member_location);
+                        
+                        if (name != null)
+                        	name.setText(m_name);
+                        if (location != null)
+                        	location.setText(m_location);
+                }
+                return v;
+        }
+}
+	
 	
 	@Override
 	protected void onPause () {
@@ -155,12 +207,18 @@ public class NetworkMain extends Activity implements Runnable{
 	@Override
 	protected void onDestroy () {
 		super.onDestroy();
-		Intent leaveIntent = new Intent (NetworkMain.this, LeaveNetwork.class);
+		leaveIntent = new Intent (NetworkMain.this, LeaveNetwork.class);
 		leaveIntent.putExtra("network_id", network_id);
 		leaveIntent.putExtra("u_unique_id", android_id);
 		leaveIntent.putExtra("latitude", latitude);
 		leaveIntent.putExtra("longitude", longitude);
 		startService(leaveIntent);
 	}
-	
+
+	/*				HACK TO PREVENT LEAVING NETWORK ON ROTATION				*/
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mHandler.sendEmptyMessage (0);
+	}
 }

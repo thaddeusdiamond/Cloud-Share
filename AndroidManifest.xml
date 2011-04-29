@@ -43,12 +43,15 @@
 		<activity android:name=".CreateNetwork" ></activity>
 		<activity android:name=".FindNetwork" ></activity>
 		<activity android:name=".JoinNetwork" ></activity>
-		<service android:name="com.wirelessnetworks.cloudshare.LeaveNetwork" ></service>
-		<activity android:name=".NetworkMain" ></activity>
+		<activity android:name=".NetworkMain" android:configChanges="orientation|keyboardHidden|screenLayout" ></activity>
 		<activity android:name=".CloudShareAlert" android:theme = "@style/Theme.Transparent"></activity>
+		
+		<service android:name=".LeaveNetwork" ></service>
     </application>
     
     <permission android:name="com.wirelessnetworks.cloudshare.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

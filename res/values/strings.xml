@@ -49,6 +49,10 @@
 	    <string name="senderID">cloudsharec2dm@gmail.com</string>
 	    
     <!--  AC2DM String Constants -->
+    	<string name="name_preference">USER_NAME</string>
+	    <string name="saved_name">SAVED_NAME</string>
+    
+    <!--  AC2DM String Constants -->
 	    <string name="registration_preference">C2DM</string>
 	    <string name="registration_key">C2DM_REGISTRATION_KEY</string>
 	    <string name="c2dm_dialog_msg">There was an error connecting to the live update service.  Make sure you have enabled a Google Account for this device and your password is correct.</string>

@@ -1,5 +1,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<TextView  
+	    android:id = "@+id/header_text"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="@string/app_name_bold"

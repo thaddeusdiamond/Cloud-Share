@@ -118,7 +118,7 @@ public class CloudShareUtils {
 	
 	
 	/*						MASSIVELY OVERLOADED REVERSE LOCATION PLUG N PLAY METHODS						*/
-	public static String reverseLocation(Context context, Location location) throws Exception {
+	public static String reverseLocation(Context context, Location location) {
 		double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
@@ -126,12 +126,12 @@ public class CloudShareUtils {
         try {
         	result = reverseLocation(context, latitude, longitude);
         } catch (Exception e) {
-        	throw e;
+        	result = "Unknown Location";
         }
         return result;
 	}
 	
-	public static String reverseLocation(Context context, String latitudeString, String longitudeString) throws Exception {
+	public static String reverseLocation(Context context, String latitudeString, String longitudeString) {
 		double latitude = Double.parseDouble(latitudeString);
         double longitude = Double.parseDouble(longitudeString);
 
@@ -139,12 +139,12 @@ public class CloudShareUtils {
         try {
         	result = reverseLocation(context, latitude, longitude);
         } catch (Exception e) {
-        	throw e;
+        	result = "Unknown Location";
         }
         return result;
 	}
 	
-	public static String reverseLocation(Context context, double latitude, double longitude) throws Exception {
+	private static String reverseLocation(Context context, double latitude, double longitude) throws Exception {
 		Geocoder reverseGeo = new Geocoder(context);
         List<Address> curLocationList;
         String locString = "";

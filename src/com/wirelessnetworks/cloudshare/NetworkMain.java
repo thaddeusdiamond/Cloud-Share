@@ -143,7 +143,7 @@ public class NetworkMain extends Activity implements Runnable{
 			TextView header_view = (TextView) findViewById(R.id.header_text);
 			header_view.setText(header_view.getText() + " - " + network_name);
 			TextView num_members_view = (TextView) findViewById(R.id.num_members);
-			num_members_view.setText(num_members + " Users Active");
+			num_members_view.setText(num_members + " User" + (Integer.parseInt(num_members) != 1 ? "s" : "") + " Active");
 			TextView created_at_view = (TextView) findViewById(R.id.network_created);
 			created_at_view.setText(created_at);
 			

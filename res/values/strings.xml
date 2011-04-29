@@ -45,7 +45,7 @@
     	<string name="username_toast_null">Invalid username</string>
     	
    	<!-- Footer String Constants -->
-	    <string name="copyright">\u00A9 Thaddeus Diamond and Anton Petrov 2011. All Rights Reserved.</string>
+	    <string name="copyright">\u00A9 Thaddeus Diamond, Jonathan MacMillan, and Anton Petrov 2011. All Rights Reserved.</string>
 	    <string name="senderID">cloudsharec2dm@gmail.com</string>
 	    
     <!--  AC2DM String Constants -->

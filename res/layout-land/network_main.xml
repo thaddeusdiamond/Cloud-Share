@@ -54,23 +54,32 @@
 					      android:layout_height = "wrap_content"
 						  android:textSize = "14px" />
 			</LinearLayout>
-			<TextView android:id = "@+id/network_chat_area"
-		    		  android:layout_width = "fill_parent"
+			<ScrollView
+					  android:id = "@+id/network_chat_scroll"
+					  android:layout_width = "fill_parent"
 	    			  android:layout_height = "wrap_content"
 	    			  android:layout_weight = "70"
-	    			  android:layout_marginBottom = "20px" ></TextView>
+	    			  android:scrollbars = "vertical" >
+				<LinearLayout android:id = "@+id/network_chat_area"
+			    		  android:layout_width = "fill_parent"
+		    			  android:layout_height = "wrap_content"
+		    			  android:orientation = "vertical"
+		    			  android:layout_marginBottom = "20px"></LinearLayout>
+  			</ScrollView>
 	    	<LinearLayout
 	    		android:orientation = "horizontal"
 	    		android:layout_width = "fill_parent"
 	    		android:layout_height = "wrap_content"
 	    		android:layout_gravity = "center"
 	    		android:gravity = "center">
-	    		<EditText android:hint = "@string/network_chat_hint"
+	    		<EditText android:id = "@+id/messageInput"
+					      android:hint = "@string/network_chat_hint"
 	    			      android:layout_width = "fill_parent"
 					      android:layout_height = "50px"
 	    				  android:layout_weight = "35"
 						  android:textSize = "16px" />
 				<Button android:layout_width = "fill_parent"
+					    android:id = "@+id/send"
 					    android:layout_height = "50px"
 						android:textSize = "16px"
 						android:layout_marginLeft = "10px"

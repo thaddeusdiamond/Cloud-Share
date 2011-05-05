@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation = "vertical"
+  android:padding = "5px" >
+  <LinearLayout
+   		android:orientation = "horizontal"
+   		android:layout_width = "fill_parent"
+   		android:layout_height = "wrap_content">
+   		<TextView android:id = "@+id/chatSender"
+   			      android:layout_width = "fill_parent"
+			      android:layout_height = "wrap_content"
+			      android:layout_weight = "50"
+				  android:gravity = "left"
+   				  android:textSize = "14px"
+   				  android:textColor = "@color/black" />
+		<TextView android:id = "@+id/chatTimestamp"
+				  android:gravity = "right"
+   			      android:layout_width = "fill_parent"
+			      android:layout_weight = "50"
+				  android:layout_height = "wrap_content"
+				  android:textSize = "14px" />
+	</LinearLayout>
+	<TextView android:id = "@+id/chatContent"
+    		  android:layout_width = "fill_parent"
+   			  android:layout_height = "wrap_content"
+   			  android:layout_marginBottom = "5px"
+   			  android:layout_marginTop = "5px"
+  			  android:textSize = "15px"
+  			  android:textColor = "@color/black"></TextView>
+    <FrameLayout android:layout_width="fill_parent"
+	    		     android:layout_height="1px" android:foreground="@color/theme1">
+    </FrameLayout>
+</LinearLayout>

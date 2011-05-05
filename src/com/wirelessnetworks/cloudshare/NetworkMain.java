@@ -1,5 +1,9 @@
 package com.wirelessnetworks.cloudshare;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import org.apache.http.HttpResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,6 +16,7 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,16 +27,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class NetworkMain extends Activity implements Runnable{
 	private Intent mIntent, alertIntent, leaveIntent;
 	private String mResult, network_name, num_members, created_at,
-		latitude, longitude, network_id, android_id;
+		latitude, longitude, network_id, android_id, mMessage;
+	private EditText mMessageInput;
+	private LinearLayout mChatArea;
+	Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a, EEE MMM dd");
+	
 	private Document mDoc;
-	private Button send;
 	private String [] member_names, member_locations,
 		member_fields = {"name", "latitude", "longitude"};
 	private NodeList networks, members;
@@ -46,7 +58,6 @@ public class NetworkMain extends Activity implements Runnable{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		send = (Button) findViewById(R.id.send);
 		mIntent = getIntent();
 		mResult = mIntent.getStringExtra("networkXml");
 		
@@ -138,23 +149,68 @@ public class NetworkMain extends Activity implements Runnable{
 	
 	private Handler mHandler = new Handler () {
 		public void handleMessage (Message msg) {
-			setContentView(R.layout.network_main);
-			
-			TextView header_view = (TextView) findViewById(R.id.header_text);
-			header_view.setText(header_view.getText() + " - " + network_name);
-			TextView num_members_view = (TextView) findViewById(R.id.num_members);
-			num_members_view.setText(num_members + " User" + (Integer.parseInt(num_members) != 1 ? "s" : "") + " Active");
-			TextView created_at_view = (TextView) findViewById(R.id.network_created);
-			created_at_view.setText(created_at);
-			
-			ListView lv = (ListView) findViewById(R.id.members_list);
-	        lv.setTextFilterEnabled(true);
-	        
-	        MemberAdapter m_adapter = new MemberAdapter(getApplicationContext(), R.id.member_name, member_names, member_locations);
-	        lv.setAdapter(m_adapter);
+			switch(msg.what) {
+			case 0:
+				setContentView(R.layout.network_main);
+				
+				TextView header_view = (TextView) findViewById(R.id.header_text);
+				header_view.setText(header_view.getText() + " - " + network_name);
+				TextView num_members_view = (TextView) findViewById(R.id.num_members);
+				num_members_view.setText(num_members + " User" + (Integer.parseInt(num_members) != 1 ? "s" : "") + " Active");
+				TextView created_at_view = (TextView) findViewById(R.id.network_created);
+				created_at_view.setText(created_at);
+	
+				mChatArea = (LinearLayout) findViewById(R.id.network_chat_area);
+				mMessageInput = (EditText) findViewById(R.id.messageInput);
+				Button send = (Button) findViewById(R.id.send);
+				send.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mMessage = mMessageInput.getText().toString();
+						mMessageInput.setText("");
+						
+						View newChat = getLayoutInflater().inflate(R.layout.chat, null);
+						((TextView) newChat.findViewById(R.id.chatSender)).setText("You");
+						((TextView) newChat.findViewById(R.id.chatTimestamp)).setText(sdf.format(cal.getTime()));
+						((TextView) newChat.findViewById(R.id.chatContent)).setText(mMessage);
+						mChatArea.addView(newChat);
+						
+						mHandler.sendEmptyMessage(2);
+						new SendMessage().execute();
+					}
+				});
+				
+				ListView lv = (ListView) findViewById(R.id.members_list);
+		        lv.setTextFilterEnabled(true);
+		        
+		        MemberAdapter m_adapter = new MemberAdapter(getApplicationContext(), R.id.member_name, member_names, member_locations);
+		        lv.setAdapter(m_adapter);
+		        break;
+		        
+			case 1:
+				Toast.makeText(getApplicationContext(), "There may have been an error sending your message", Toast.LENGTH_SHORT).show();
+				break;
+				
+			case 2:
+				((ScrollView) findViewById(R.id.network_chat_scroll)).scrollTo(0, mChatArea.getHeight() + 50);
+			}
 		}
 	};
 	
+	private class SendMessage extends AsyncTask<String, Integer, Long> {
+		@Override
+		protected Long doInBackground(String...strings) {
+			HttpResponse response = CloudShareUtils.postData("broadcast", new String[] {"nid", "u_unique_id", "u_platform", "message", "latitude", "longitude"},
+				new String[] {network_id, android_id, "Android", mMessage, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude())});
+			String result;
+			try {
+				result = CloudShareUtils.checkErrors(response);
+			} catch (Exception e) {
+				mHandler.sendEmptyMessage(1);
+			}
+			return (long) 0;
+		}
+	}
 	
 	private class MemberAdapter extends ArrayAdapter<String> {
 

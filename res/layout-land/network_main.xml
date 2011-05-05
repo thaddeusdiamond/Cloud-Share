@@ -40,7 +40,8 @@
 		     <LinearLayout
 	    		android:orientation = "horizontal"
 	    		android:layout_width = "fill_parent"
-	    		android:layout_height = "wrap_content">
+	    		android:layout_height = "wrap_content"
+   			    android:layout_marginBottom = "10px">
 	    		<TextView android:id = "@+id/num_members"
 	    			      android:layout_width = "fill_parent"
 					      android:layout_height = "wrap_content"
@@ -59,6 +60,7 @@
 					  android:layout_width = "fill_parent"
 	    			  android:layout_height = "wrap_content"
 	    			  android:layout_weight = "70"
+   			    	  android:layout_marginBottom = "10px"
 	    			  android:scrollbars = "vertical" >
 				<LinearLayout android:id = "@+id/network_chat_area"
 			    		  android:layout_width = "fill_parent"

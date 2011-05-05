@@ -1,6 +1,7 @@
 package com.wirelessnetworks.cloudshare;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.apache.http.HttpResponse;
@@ -38,6 +39,8 @@ public class NetworkMain extends Activity implements Runnable{
 	private Intent mIntent, alertIntent, leaveIntent;
 	private String mResult, network_name, num_members, created_at,
 		latitude, longitude, network_id, android_id, mMessage;
+	
+	private ArrayList<String[]> mMessages = new ArrayList<String[]>();
 	private EditText mMessageInput;
 	private LinearLayout mChatArea;
 	Calendar cal = Calendar.getInstance();
@@ -167,21 +170,25 @@ public class NetworkMain extends Activity implements Runnable{
 					@Override
 					public void onClick(View v) {
 						mMessage = mMessageInput.getText().toString();
-						mMessageInput.setText("");
-						
-						View newChat = getLayoutInflater().inflate(R.layout.chat, null);
-						((TextView) newChat.findViewById(R.id.chatSender)).setText("You");
-						((TextView) newChat.findViewById(R.id.chatTimestamp)).setText(sdf.format(cal.getTime()));
-						((TextView) newChat.findViewById(R.id.chatContent)).setText(mMessage);
-						mChatArea.addView(newChat);
-						
-						mHandler.sendEmptyMessage(2);
-						new SendMessage().execute();
+						if (mMessage.length() > 0) {
+							mMessages.add(new String[] {"You", sdf.format(cal.getTime()), mMessage});
+							mMessageInput.setText("");
+							
+				        	createNewChat("You", sdf.format(cal.getTime()), mMessage);
+							mHandler.sendEmptyMessage(2);
+							new SendMessage().execute();
+						}
 					}
 				});
 				
 				ListView lv = (ListView) findViewById(R.id.members_list);
 		        lv.setTextFilterEnabled(true);
+		        
+		        for (int i = 0; i < mMessages.size(); i++) {
+		        	String[] messageContents = mMessages.get(i);
+		        	createNewChat(messageContents[0], messageContents[1], messageContents[2]);
+		        }
+				mHandler.sendEmptyMessage(2);
 		        
 		        MemberAdapter m_adapter = new MemberAdapter(getApplicationContext(), R.id.member_name, member_names, member_locations);
 		        lv.setAdapter(m_adapter);
@@ -196,6 +203,14 @@ public class NetworkMain extends Activity implements Runnable{
 			}
 		}
 	};
+	
+	private void createNewChat(String sender, String timestamp, String content) {
+		View newChat = getLayoutInflater().inflate(R.layout.chat, null);
+		((TextView) newChat.findViewById(R.id.chatSender)).setText(sender);
+		((TextView) newChat.findViewById(R.id.chatTimestamp)).setText(timestamp);
+		((TextView) newChat.findViewById(R.id.chatContent)).setText(content);
+		mChatArea.addView(newChat);
+	}
 	
 	private class SendMessage extends AsyncTask<String, Integer, Long> {
 		@Override

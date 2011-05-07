@@ -67,15 +67,24 @@ public class C2DMReceiver extends BroadcastReceiver {
 	{
 		Bundle extras = intent.getExtras();
 		String type = (String) extras.get("type");
-
+		Intent newMsgIntent = new Intent ();
+		
 		if (type.equals("broadcast")) {
-			Intent newMsgIntent = new Intent ();
 			newMsgIntent.putExtra("message", (String) extras.get("message"))
 						.putExtra("u_unique_id", (String) extras.get("u_unique_id"))
 						.putExtra("user", (String) extras.get("user"))
 						.setAction("com.wirelessnetworks.cloudshare.NEW_MESSAGE");
-			context.sendBroadcast (newMsgIntent);
+		} else if (type.equals("join")) {
+			newMsgIntent.putExtra("u_unique_id", (String) extras.get("u_unique_id"))
+				.putExtra("message", (String) extras.get("message"))
+				.setAction("com.wirelessnetworks.cloudshare.USER_JOINED");
+		} else if (type.equals("leave")) {
+			newMsgIntent.putExtra("u_unique_id", (String) extras.get("u_unique_id"))
+				.putExtra("message", (String) extras.get("message"))
+				.setAction("com.wirelessnetworks.cloudshare.USER_LEFT");
 		}
+
+		context.sendBroadcast (newMsgIntent);
 	}
 
 

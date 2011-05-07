@@ -2,7 +2,6 @@ package com.wirelessnetworks.cloudshare;
 
 import org.apache.http.HttpResponse;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -46,8 +45,8 @@ public class LeaveNetwork extends Service {
             	break;
 		}
 		
-		stopSelf();
-		return Activity.RESULT_OK;
+		stopService(intent);
+		return Service.START_NOT_STICKY;
 	}
 	
 	@Override

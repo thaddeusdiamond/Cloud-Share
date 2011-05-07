@@ -29,7 +29,7 @@ import android.provider.Settings.Secure;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -217,7 +217,8 @@ public class NetworkMain extends Activity implements Runnable {
 							mHandler.sendEmptyMessage(2);
 							new SendMessage().execute();
 						}
-						getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(mMessageInput.getWindowToken(), 0);
 					}
 				});
 				
@@ -363,7 +364,10 @@ public class NetworkMain extends Activity implements Runnable {
         		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
 				String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
 				mMembers.add(memberInformation);
-        		mMemberAdapter.notifyDataSetChanged();
+				TextView num_members_view = (TextView) findViewById(R.id.num_members);
+				num_members_view.setText(num_members + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+				mMemberAdapter.notifyDataSetChanged();
+				mMemberAdapter.notifyDataSetChanged();
     		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
     			Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
         		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
@@ -373,7 +377,9 @@ public class NetworkMain extends Activity implements Runnable {
         			if (memberInfo[0].equals(information[0]))
         				mMembers.remove(i);
         		}
-        		mMemberAdapter.notifyDataSetChanged();
+				TextView num_members_view = (TextView) findViewById(R.id.num_members);
+				num_members_view.setText(num_members + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+				mMemberAdapter.notifyDataSetChanged();
         	}
             return;
         }

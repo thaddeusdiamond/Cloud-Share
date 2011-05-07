@@ -75,7 +75,7 @@ public class NetworkMain extends Activity implements Runnable{
         // --------------------------------------------------------------------------
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        mLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         latitude = Double.toString(mLocation.getLatitude());
         longitude = Double.toString(mLocation.getLongitude());
         
@@ -286,7 +286,7 @@ public class NetworkMain extends Activity implements Runnable{
 	@Override
 	protected void onResume () {
 		super.onResume();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 100, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120000, 100, locationListener);
 	}
 	
 	@Override

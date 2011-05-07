@@ -126,7 +126,7 @@ public class FindNetwork extends Activity implements Runnable {
           
 
         // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         // ----------------------------------------------------------------------------
         
         Thread main = new Thread(this);

@@ -157,7 +157,7 @@ public class CloudShareUtils {
 
             if (curLocationList.size()> 0) {
                 locString += curLocationList.get(0).getAddressLine(0);
-                locString += curLocationList.get(0).getLocality();
+                locString += ", " + curLocationList.get(0).getLocality();
             } else {
             	throw new Exception();
             }

@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -40,7 +41,7 @@ import android.widget.Toast;
 public class NetworkMain extends Activity implements Runnable{
 	private Intent mIntent, alertIntent, leaveIntent;
 	private String mResult, network_name, num_members, created_at,
-		latitude, longitude, network_id, android_id, mMessage;
+		latitude, longitude, network_id, android_id, mMessage, bestProvider;
 	
 	private ArrayList<String[]> mMessages = new ArrayList<String[]>();
 	private EditText mMessageInput;
@@ -59,6 +60,8 @@ public class NetworkMain extends Activity implements Runnable{
 	private Location mLocation;
 	private Toast outOfService;
 	
+	private static final double LOC_OFFSET = 0.001;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,7 +78,12 @@ public class NetworkMain extends Activity implements Runnable{
         // --------------------------------------------------------------------------
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
+        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+        bestProvider = locationManager.getBestProvider(criteria, true);
+        
+        mLocation = locationManager.getLastKnownLocation(bestProvider);
         latitude = Double.toString(mLocation.getLatitude());
         longitude = Double.toString(mLocation.getLongitude());
         
@@ -83,8 +91,24 @@ public class NetworkMain extends Activity implements Runnable{
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
               // Called when a new location is found by the network location provider.
+              if ((Math.abs(location.getLatitude() - Double.parseDouble(latitude)) > LOC_OFFSET) ||
+            	  (Math.abs(location.getLatitude() - Double.parseDouble(latitude)) > LOC_OFFSET)) {
+            	  finish();
+            	  
+              	alertIntent = new Intent ();
+		    	alertIntent.setClass (getApplicationContext(), CloudShareAlert.class);
+		    	alertIntent.setAction (CloudShareAlert.class.getName());
+		    	alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		    	alertIntent.putExtra("title", "Out of Network Range");
+		    	alertIntent.putExtra("dialog", "You have wandered too far away from the network.  Please select a new one to join."); 
+		    	alertIntent.putExtra("action", "");
+		    	startActivity (alertIntent);
+              }
+            
               latitude = Double.toString(location.getLatitude());
               longitude = Double.toString(location.getLongitude());
+
+              
             }
 
     		// OUT_OF_SERVICE or TEMPORARILY_UNAVAILABLE need to be handled
@@ -232,7 +256,11 @@ public class NetworkMain extends Activity implements Runnable{
 			HttpResponse response = CloudShareUtils.postData("broadcast", new String[] {"nid", "u_unique_id", "u_platform", "message", "latitude", "longitude"},
 				new String[] {network_id, android_id, "Android", mMessage, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude())});
 			String result;
-			try {
+			try {Criteria criteria = new Criteria();
+	        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
+	        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+	        String bestProvider = locationManager.getBestProvider(criteria, true);
+			
 				result = CloudShareUtils.checkErrors(response);
 			} catch (Exception e) {
 				mHandler.sendEmptyMessage(1);
@@ -286,7 +314,7 @@ public class NetworkMain extends Activity implements Runnable{
 	@Override
 	protected void onResume () {
 		super.onResume();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 100, locationListener);
+        locationManager.requestLocationUpdates(bestProvider, 120000, 100, locationListener);
 	}
 	
 	@Override

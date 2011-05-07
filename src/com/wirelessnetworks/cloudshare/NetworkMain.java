@@ -11,8 +11,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
@@ -63,6 +65,11 @@ public class NetworkMain extends Activity implements Runnable{
 		setContentView(R.layout.loading);
 		mIntent = getIntent();
 		mResult = mIntent.getStringExtra("networkXml");
+		
+		// Setup/register messageReceiver
+		// -----------------------------------------------------------------------------
+		IntentFilter mIntentFilter = new IntentFilter ("com.wirelessnetworks.cloudshare.NEW_MESSAGE");
+		registerReceiver(messageReceiver, mIntentFilter);
 		
 		// Acquire initial location
         // --------------------------------------------------------------------------
@@ -117,7 +124,7 @@ public class NetworkMain extends Activity implements Runnable{
 	@Override
 	public void run() {
 		// Begin parsing data
-		// -----------------------------------------------------------
+		// -----------------------------------------------------------------------------
 		mDoc = CloudShareUtils.getDOMbody(mResult);
 		networks = mDoc.getElementsByTagName("network");
 		network = networks.item(0);
@@ -200,9 +207,16 @@ public class NetworkMain extends Activity implements Runnable{
 				
 			case 2:
 				((ScrollView) findViewById(R.id.network_chat_scroll)).scrollTo(0, mChatArea.getHeight() + 50);
+				break;
 			}
 		}
 	};
+	
+	public void acceptNewMessage(String senderId, String sender, String message) {
+		if (!senderId.equals(android_id)) {
+			createNewChat(sender, sdf.format(cal.getTime()), message);
+		}
+	}
 	
 	private void createNewChat(String sender, String timestamp, String content) {
 		View newChat = getLayoutInflater().inflate(R.layout.chat, null);
@@ -292,4 +306,19 @@ public class NetworkMain extends Activity implements Runnable{
 		super.onConfigurationChanged(newConfig);
 		mHandler.sendEmptyMessage (0);
 	}
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        	Bundle extras = intent.getExtras();
+        	String sender_id = (String) extras.get("u_unique_id");
+        	// Only display the message if it was sent by someone other than yourself
+        	// Your message gets displayed in the onClickListener of the 'Send' button
+        	if (!(sender_id.equals(android_id))) {
+        		String user = (String) extras.getString("user");
+            	NetworkMain.this.createNewChat(user, sdf.format(cal.getTime()), (String) extras.get("message"));
+        	}
+            return;
+        }
+    };
+
 }

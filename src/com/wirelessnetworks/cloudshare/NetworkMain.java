@@ -365,7 +365,7 @@ public class NetworkMain extends Activity implements Runnable {
 				String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
 				mMembers.add(memberInformation);
 				TextView num_members_view = (TextView) findViewById(R.id.num_members);
-				num_members_view.setText(num_members + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+				num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
 				mMemberAdapter.notifyDataSetChanged();
 				mMemberAdapter.notifyDataSetChanged();
     		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
@@ -378,7 +378,7 @@ public class NetworkMain extends Activity implements Runnable {
         				mMembers.remove(i);
         		}
 				TextView num_members_view = (TextView) findViewById(R.id.num_members);
-				num_members_view.setText(num_members + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+				num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
 				mMemberAdapter.notifyDataSetChanged();
         	}
             return;

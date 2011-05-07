@@ -43,8 +43,10 @@ public class CloudShareUtils {
 	        // Add data to be sent
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 	    	nameValuePairs.add(new BasicNameValuePair("authtoken", "REDACTED"));
-        	for (int i = 0; i < parameters.length; i++)
-	        	nameValuePairs.add(new BasicNameValuePair(parameters[i], values[i]));
+        	for (int i = 0; i < parameters.length; i++) {
+	        	Log.d(parameters[i], values[i]);
+        		nameValuePairs.add(new BasicNameValuePair(parameters[i], values[i]));
+        	}
         	httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
@@ -108,6 +110,7 @@ public class CloudShareUtils {
 	public static String checkErrors(HttpResponse response) throws Exception {
 		String result = CloudShareUtils.parseHttpResponse(response);
 		Document doc = CloudShareUtils.getDOMbody(result);
+		Log.d("CHECK_ERRORS_FUNCT", result);
 		
 		NodeList errors = doc.getElementsByTagName("error");
 		if (errors.getLength() > 0)

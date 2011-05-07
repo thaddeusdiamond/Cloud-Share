@@ -29,6 +29,7 @@ import android.provider.Settings.Secure;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,20 +39,22 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NetworkMain extends Activity implements Runnable{
+public class NetworkMain extends Activity implements Runnable {
 	private Intent mIntent, alertIntent, leaveIntent;
 	private String mResult, network_name, num_members, created_at,
 		latitude, longitude, network_id, android_id, mMessage, bestProvider;
 	
 	private ArrayList<String[]> mMessages = new ArrayList<String[]>();
+	private ArrayList<String[]> mMembers = new ArrayList<String[]>();
+	private MemberAdapter mMemberAdapter;
+	
 	private EditText mMessageInput;
 	private LinearLayout mChatArea;
 	Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a, EEE MMM dd");
 	
 	private Document mDoc;
-	private String [] member_names, member_locations,
-		member_fields = {"name", "latitude", "longitude"};
+	private String [] member_fields = {"id", "name", "latitude", "longitude"};
 	private NodeList networks, members;
 	private Node network, member;
 	private Element network_element;
@@ -72,6 +75,10 @@ public class NetworkMain extends Activity implements Runnable{
 		// Setup/register messageReceiver
 		// -----------------------------------------------------------------------------
 		IntentFilter mIntentFilter = new IntentFilter ("com.wirelessnetworks.cloudshare.NEW_MESSAGE");
+		registerReceiver(messageReceiver, mIntentFilter);
+		mIntentFilter = new IntentFilter ("com.wirelessnetworks.cloudshare.USER_JOINED");
+		registerReceiver(messageReceiver, mIntentFilter);
+		mIntentFilter = new IntentFilter ("com.wirelessnetworks.cloudshare.USER_LEFT");
 		registerReceiver(messageReceiver, mIntentFilter);
 		
 		// Acquire initial location
@@ -138,6 +145,7 @@ public class NetworkMain extends Activity implements Runnable{
 		    	startActivity (alertIntent);
             }
           };
+			
         // ----------------------------------------------------------------------------
 		
 		Thread main = new Thread(this);
@@ -162,16 +170,14 @@ public class NetworkMain extends Activity implements Runnable{
 		
 		members = network_element.getElementsByTagName("member");
 		if (members.getLength() > 0) {
-			member_names = new String[members.getLength()];
-			member_locations = new String[members.getLength()];
 			for (int i = 0; i < members.getLength(); i++) {
 				member = members.item(i);
 				if (member.getNodeType() == Node.ELEMENT_NODE) {
 					Element member_element = (Element) member;
 					String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
 					// NEED TO ADD TO LIST HERE
-					member_names[i] = information[0];
-					member_locations[i] = CloudShareUtils.reverseLocation(getApplicationContext(), information[1], information[2]);
+					String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
+					mMembers.add(memberInformation);
 				}
 			}
 		}
@@ -196,6 +202,8 @@ public class NetworkMain extends Activity implements Runnable{
 	
 				mChatArea = (LinearLayout) findViewById(R.id.network_chat_area);
 				mMessageInput = (EditText) findViewById(R.id.messageInput);
+				if (msg.obj != null)
+					mMessageInput.setText((String) msg.obj);
 				Button send = (Button) findViewById(R.id.send);
 				send.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -209,6 +217,7 @@ public class NetworkMain extends Activity implements Runnable{
 							mHandler.sendEmptyMessage(2);
 							new SendMessage().execute();
 						}
+						getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 					}
 				});
 				
@@ -221,8 +230,8 @@ public class NetworkMain extends Activity implements Runnable{
 		        }
 				mHandler.sendEmptyMessage(2);
 		        
-		        MemberAdapter m_adapter = new MemberAdapter(getApplicationContext(), R.id.member_name, member_names, member_locations);
-		        lv.setAdapter(m_adapter);
+		        mMemberAdapter = new MemberAdapter(getApplicationContext(), R.id.member_name, mMembers);
+		        lv.setAdapter(mMemberAdapter);
 		        break;
 		        
 			case 1:
@@ -265,15 +274,13 @@ public class NetworkMain extends Activity implements Runnable{
 		}
 	}
 	
-	private class MemberAdapter extends ArrayAdapter<String> {
+	private class MemberAdapter extends ArrayAdapter<String[]> {
 
-		private String[] member_names;
-	    private String[] member_locations;
+		private ArrayList<String[]> mMembers;
 	    
-        public MemberAdapter(Context context, int textViewResourceId, String[] member_names, String[] member_locations) {
-                super(context, textViewResourceId, member_names);
-                this.member_names = member_names;
-                this.member_locations = member_locations;
+        public MemberAdapter(Context context, int textViewResourceId, ArrayList<String[]> mMembers) {
+                super(context, textViewResourceId, mMembers);
+                this.mMembers = mMembers;
         }
 
         @Override
@@ -283,8 +290,9 @@ public class NetworkMain extends Activity implements Runnable{
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(R.layout.member_item, null);
                 }
-                String m_name = member_names[position];
-                String m_location = member_locations[position];
+                String[] memberInformation = mMembers.get(position);
+                String m_name = memberInformation[1];
+            	String m_location = memberInformation[2];
                 
                 if (m_name != null) {
                         TextView name = (TextView) v.findViewById(R.id.member_name);
@@ -322,24 +330,50 @@ public class NetworkMain extends Activity implements Runnable{
 		leaveIntent.putExtra("latitude", latitude);
 		leaveIntent.putExtra("longitude", longitude);
 		startService(leaveIntent);
+		unregisterReceiver(messageReceiver);
 	}
 
 	/*				HACK TO PREVENT LEAVING NETWORK ON ROTATION				*/
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		String currentMessage = mMessageInput.getText().toString();
 		super.onConfigurationChanged(newConfig);
-		mHandler.sendEmptyMessage (0);
+		
+		Message m = new Message();
+		m.what = 0;
+		m.obj = currentMessage;
+		mHandler.sendMessage(m);
 	}
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+    
+	private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
         	Bundle extras = intent.getExtras();
-        	String sender_id = (String) extras.get("u_unique_id");
-        	// Only display the message if it was sent by someone other than yourself
-        	// Your message gets displayed in the onClickListener of the 'Send' button
-        	if (!(sender_id.equals(android_id))) {
-        		String user = (String) extras.getString("user");
-            	NetworkMain.this.createNewChat(user, sdf.format(cal.getTime()), (String) extras.get("message"));
+        	String action = intent.getAction();
+        	
+        	if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
+        		String sender_id = (String) extras.get("u_unique_id");
+            	// Only display the message if it was sent by someone other than yourself
+	        	// Your message gets displayed in the onClickListener of the 'Send' button
+	        	if (!(sender_id.equals(android_id)))
+	        		NetworkMain.this.createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
+        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_JOINED")) {
+        		Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
+        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
+        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
+				String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
+				mMembers.add(memberInformation);
+        		mMemberAdapter.notifyDataSetChanged();
+    		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
+    			Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
+        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
+        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
+				for (int i = 0; i < mMembers.size(); i++) {
+        			String[] memberInfo = mMembers.get(i);
+        			if (memberInfo[0].equals(information[0]))
+        				mMembers.remove(i);
+        		}
+        		mMemberAdapter.notifyDataSetChanged();
         	}
             return;
         }

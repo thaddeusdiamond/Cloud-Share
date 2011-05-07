@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -64,7 +65,17 @@ public class C2DMReceiver extends BroadcastReceiver {
 
 	private void handleMessage(Context context, Intent intent)
 	{
-		//Do whatever you want with the message
+		Bundle extras = intent.getExtras();
+		String type = (String) extras.get("type");
+
+		if (type.equals("broadcast")) {
+			Intent newMsgIntent = new Intent ();
+			newMsgIntent.putExtra("message", (String) extras.get("message"))
+						.putExtra("u_unique_id", (String) extras.get("u_unique_id"))
+						.putExtra("user", (String) extras.get("user"))
+						.setAction("com.wirelessnetworks.cloudshare.NEW_MESSAGE");
+			context.sendBroadcast (newMsgIntent);
+		}
 	}
 
 

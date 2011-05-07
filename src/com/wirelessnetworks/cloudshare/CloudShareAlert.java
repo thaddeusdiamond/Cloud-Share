@@ -19,20 +19,31 @@ public class CloudShareAlert extends Activity {
 	
 	public void createAlert (String title, String dialog, final String action) {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setTitle(title)
+    	if (action.length() > 0) {
+    		builder.setTitle(title)
     			.setMessage(dialog)
     			.setPositiveButton("Configure", new DialogInterface.OnClickListener() {
     				public void onClick(DialogInterface dialog, int which) {
     					startActivity (new Intent (action));
     					finish ();
     				} 
-	    }) 
-    	.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-		     public void onClick(DialogInterface dialog, int which) {
-		    	 dialog.cancel();
-		    	 finish ();
-		     } 
-	    });
+		    }) 
+	    	.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
+			     public void onClick(DialogInterface dialog, int which) {
+			    	 dialog.cancel();
+			    	 finish ();
+			     } 
+		    });
+    	} else {
+    		builder.setTitle(title)
+				.setMessage(dialog)
+				.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+				     public void onClick(DialogInterface dialog, int which) {
+				    	 dialog.cancel();
+				    	 finish ();
+				     } 
+			    });
+    	}
     	
     	
     	

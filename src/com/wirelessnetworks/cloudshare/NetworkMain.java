@@ -357,9 +357,9 @@ public class NetworkMain extends Activity implements Runnable {
         	// Your message gets displayed in the onClickListener of the 'Send' button
         	if (!(sender_id.equals(android_id))) {
 	        	if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
-	        			mMessages.add(new String[] {(String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message")});
-						NetworkMain.this.createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
-	
+        			mMessages.add(new String[] {(String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message")});
+					createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
+					mHandler.sendEmptyMessage(2);
 	        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_JOINED")) {
 	        		Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
 	        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);

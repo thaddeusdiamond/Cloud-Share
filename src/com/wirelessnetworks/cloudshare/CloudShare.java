@@ -1,3 +1,15 @@
+// ============================================================================
+// CS 434; 05/08/11; Prof. Yang
+// 
+// CloudShare Splash Screen Class
+//
+// - This is the activity that the user first sees when the application starts.
+// - All the work in setting up the UI is done in a handler.
+// - Checks if the phone has already been registered.
+// 
+// ============================================================================
+
+
 package com.wirelessnetworks.cloudshare;
 
 import java.util.ArrayList;
@@ -26,8 +38,10 @@ public class CloudShare extends Activity implements Runnable {
         setContentView(R.layout.loading);
         
         // Check whether a C2DM registration exists
-        regPreference = this.getSharedPreferences(this.getString(R.string.registration_preference), Context.MODE_PRIVATE);
-        regKeyExists = regPreference.contains(this.getString(R.string.registration_key));
+        regPreference = this.getSharedPreferences(this.getString
+        		(R.string.registration_preference), Context.MODE_PRIVATE);
+        regKeyExists = regPreference.contains
+        		(this.getString(R.string.registration_key));
                 
         Thread main = new Thread(this);
         main.start();
@@ -35,6 +49,10 @@ public class CloudShare extends Activity implements Runnable {
     @Override
     public void onRestart() {
     	super.onRestart();
+    	// The registration is done here as well because in the case that the
+    	// user opts not to register and then comes back to the application at
+    	// a later time, onRestart will be called instead of onCreate and
+    	// we need to give the user the opportunity to register
     	if (!regKeyExists) {
     		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
     		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
@@ -45,9 +63,7 @@ public class CloudShare extends Activity implements Runnable {
     }
     
     public void run() {
-        /********** PERFORM INITIAL BACKGROUND LOADING WHILE SPLASH SCREEN NOT YET UP
-         **********
-         **********/
+    	// Perform initial loading before setting up the main UI
     	if (!regKeyExists) {
     		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
     		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
@@ -59,9 +75,8 @@ public class CloudShare extends Activity implements Runnable {
     
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-         	/********* SET UP THE MAIN UI/DONE LAST AFTER CHANGING CONTENT VIEW 
-        	 *********
-        	 *********			Thaddeus Diamond 03-02-2011 */
+        	// Handler code is executed in the main UI's thread and this is where
+        	// we setup the activity's content
         	
         	setContentView(R.layout.main);
         	

@@ -1,3 +1,13 @@
+// ============================================================================
+// CS 434; 05/08/11; Thaddeus Diamond, Jonathan MacMillan, Anton Petrov
+//
+// Cloud Share Utilities
+//
+// - Extensive library of functions to ease in development and let the activitys
+//	 remain concise
+//
+// ============================================================================
+
 package com.wirelessnetworks.cloudshare;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;

@@ -1,3 +1,13 @@
+// ============================================================================
+// CS 434; 05/08/11; Thaddeus Diamond, Jonathan MacMillan, Anton Petrov
+//
+// Cloud Share Utilities
+//
+// - Extensive library of functions to ease in development and let the activities
+//	 remain concise
+//
+// ============================================================================
+
 package com.wirelessnetworks.cloudshare;
 
 import java.io.BufferedReader;
@@ -31,8 +41,10 @@ import android.util.Log;
 
 public class CloudShareUtils {
 
+	// Standard URL for backend
 	private static String route_url = "https://cloudshareroute.appspot.com/";
 	
+	// Post the correct data to our backend
 	public static HttpResponse postData(String path, String[] parameters, String[] values) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
@@ -61,6 +73,7 @@ public class CloudShareUtils {
 		
 	}
 	
+	// Extract results from a DOM element
 	public static String[] getDOMresults(Element parent, String[] fields) {
 		String[] child_values = new String[fields.length];
 		
@@ -75,6 +88,7 @@ public class CloudShareUtils {
 	    return el.getElementsByTagName(tag).item(0).getChildNodes().item(0).getNodeValue();    
 	 }
 	
+	// Get results in the form of a DOM to be parsed
 	public static Document getDOMbody(String response) {
 		Document doc = null;
 		try {
@@ -91,6 +105,7 @@ public class CloudShareUtils {
 		return doc;
 	}
 	
+	// Parse the HTTP response
 	public static String parseHttpResponse(HttpResponse response) {
 		// Parse the xml input resulting from a refresh post
 		StringBuffer results = new StringBuffer("");
@@ -107,6 +122,7 @@ public class CloudShareUtils {
 		return results.toString();
 	}
 	
+	// Check for errors in a given response
 	public static String checkErrors(HttpResponse response) throws Exception {
 		String result = CloudShareUtils.parseHttpResponse(response);
 		Document doc = CloudShareUtils.getDOMbody(result);

@@ -1,3 +1,16 @@
+// ============================================================================
+// CS 434; 05/08/11; Prof. Yang
+// 
+// About Us
+//
+//	- Activity that is brought to the front of the main UI when the About Us
+//	  button is clicked. The activity sets up its own UI which contains
+//	  information about the project and the team.
+//
+// ============================================================================
+
+
+
 package com.wirelessnetworks.cloudshare;
 
 import android.app.Activity;

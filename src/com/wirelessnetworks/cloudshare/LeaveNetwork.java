@@ -1,3 +1,13 @@
+// ============================================================================
+// CS 434; 05/08/11; Prof. Yang
+//
+// Leave Network
+//
+// - Service that allows the user to leave the network once the NetworkMain
+//	 activity closes
+//
+// ============================================================================
+
 package com.wirelessnetworks.cloudshare;
 
 import org.apache.http.HttpResponse;
@@ -45,6 +55,7 @@ public class LeaveNetwork extends Service {
             	break;
 		}
 		
+		// STOP THE SERVICE
 		stopService(intent);
 		return Service.START_NOT_STICKY;
 	}

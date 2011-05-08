@@ -1,3 +1,13 @@
+// ============================================================================
+// CS 434; 05/08/11; Prof. Yang
+//
+// Cloud Share Widget Provide
+//
+// - Unfinished Widget UI that all it does is launch the main activity upon
+//	 being clicked
+//
+// ============================================================================
+
 package com.wirelessnetworks.cloudshare;
 
 import android.app.PendingIntent;

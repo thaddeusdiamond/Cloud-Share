@@ -1,16 +1,11 @@
 // ============================================================================
 // CS 434; 05/08/11; Thaddeus Diamond, Jonathan MacMillan, Anton Petrov
 //
-// Cloud Share Utilities
+// NetworkMain
 //
-// - Extensive library of functions to ease in development and let the activitys
-//	 remain concise
+// - This is the Activity representing the UI for being within a network
 //
 // ============================================================================
-
-
-
-
 
 package com.wirelessnetworks.cloudshare;
 
@@ -162,7 +157,8 @@ public class NetworkMain extends Activity implements Runnable {
 			
         // ----------------------------------------------------------------------------
 		
-		Thread main = new Thread(this);
+		//Start main thread
+        Thread main = new Thread(this);
 		main.start();
 	}
 
@@ -195,10 +191,10 @@ public class NetworkMain extends Activity implements Runnable {
 				}
 			}
 		}
-		// Done parsing
 		// ----------------------------------------------------------
 		
-		mHandler.sendEmptyMessage (0);
+		// Done parsing, go set up UI
+		mHandler.sendEmptyMessage(0);
 	}
 	
 	private Handler mHandler = new Handler () {
@@ -207,6 +203,7 @@ public class NetworkMain extends Activity implements Runnable {
 			case 0:
 				setContentView(R.layout.network_main);
 				
+				// Find all view layouts
 				TextView header_view = (TextView) findViewById(R.id.header_text);
 				header_view.setText(header_view.getText() + " - " + network_name);
 				TextView num_members_view = (TextView) findViewById(R.id.num_members);
@@ -219,10 +216,13 @@ public class NetworkMain extends Activity implements Runnable {
 				if (msg.obj != null)
 					mMessageInput.setText((String) msg.obj);
 				Button send = (Button) findViewById(R.id.send);
+				
+				// Set a listener for when we want to send a message
 				send.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						mMessage = mMessageInput.getText().toString();
+						// Only send non-null messages
 						if (mMessage.length() > 0) {
 							mMessages.add(new String[] {"You", sdf.format(cal.getTime()), mMessage});
 							mMessageInput.setText("");
@@ -231,6 +231,8 @@ public class NetworkMain extends Activity implements Runnable {
 							mHandler.sendEmptyMessage(2);
 							new SendMessage().execute();
 						}
+						
+						// Hide the keyboard
 						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 						imm.hideSoftInputFromWindow(mMessageInput.getWindowToken(), 0);
 					}
@@ -239,6 +241,7 @@ public class NetworkMain extends Activity implements Runnable {
 				ListView lv = (ListView) findViewById(R.id.members_list);
 		        lv.setTextFilterEnabled(true);
 		        
+		        //  After rotation add back all messages
 		        for (int i = 0; i < mMessages.size(); i++) {
 		        	String[] messageContents = mMessages.get(i);
 		        	createNewChat(messageContents[0], messageContents[1], messageContents[2]);
@@ -250,22 +253,19 @@ public class NetworkMain extends Activity implements Runnable {
 		        break;
 		        
 			case 1:
+				// Server error toast
 				Toast.makeText(getApplicationContext(), "There may have been an error sending your message", Toast.LENGTH_SHORT).show();
 				break;
 				
 			case 2:
+				// Asynchronous scroll to bottom (after view loads)
 				((ScrollView) findViewById(R.id.network_chat_scroll)).scrollTo(0, mChatArea.getHeight() + 50);
 				break;
 			}
 		}
 	};
 	
-	public void acceptNewMessage(String senderId, String sender, String message) {
-		if (!senderId.equals(android_id)) {
-			createNewChat(sender, sdf.format(cal.getTime()), message);
-		}
-	}
-	
+	// Create a new chat (simple view inflater)
 	private void createNewChat(String sender, String timestamp, String content) {
 		View newChat = getLayoutInflater().inflate(R.layout.chat, null);
 		((TextView) newChat.findViewById(R.id.chatSender)).setText(sender);
@@ -274,9 +274,11 @@ public class NetworkMain extends Activity implements Runnable {
 		mChatArea.addView(newChat);
 	}
 	
+	// Class to extend sending messages (queuing handled, therefore stopping the possibility of multi-thread exhaustion)
 	private class SendMessage extends AsyncTask<String, Integer, Long> {
 		@Override
 		protected Long doInBackground(String...strings) {
+			// Send out a broadcast
 			HttpResponse response = CloudShareUtils.postData("broadcast", new String[] {"nid", "u_unique_id", "u_platform", "message", "latitude", "longitude"},
 				new String[] {network_id, android_id, "Android", mMessage, Double.toString(mLocation.getLatitude()), Double.toString(mLocation.getLongitude())});
 			String result;
@@ -289,6 +291,7 @@ public class NetworkMain extends Activity implements Runnable {
 		}
 	}
 	
+	// Custom list adapter for members (to use an arraylist<string>)
 	private class MemberAdapter extends ArrayAdapter<String[]> {
 
 		private ArrayList<String[]> mMembers;
@@ -322,7 +325,7 @@ public class NetworkMain extends Activity implements Runnable {
         }
 }
 	
-	
+	/* LOCATION LIFECYCLE PROTECTION */
 	@Override
 	protected void onPause () {
 		super.onPause();
@@ -335,10 +338,12 @@ public class NetworkMain extends Activity implements Runnable {
 		super.onResume();
         locationManager.requestLocationUpdates(bestProvider, 120000, 100, locationListener);
 	}
+	/********************************/
 	
 	@Override
 	protected void onDestroy () {
 		super.onDestroy();
+		// Leave the network when you destroy yourself
 		leaveIntent = new Intent (NetworkMain.this, LeaveNetwork.class);
 		leaveIntent.putExtra("network_id", network_id);
 		leaveIntent.putExtra("u_unique_id", android_id);
@@ -360,6 +365,7 @@ public class NetworkMain extends Activity implements Runnable {
 		mHandler.sendMessage(m);
 	}
     
+	/*				HACK TO UPDATE THE UI FROM A C2DM RECEIVER				*/
 	private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -370,10 +376,13 @@ public class NetworkMain extends Activity implements Runnable {
         	// Only display the message if it was sent by someone other than yourself
         	// Your message gets displayed in the onClickListener of the 'Send' button
         	if (!(sender_id.equals(android_id))) {
-	        	if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
+	        	// User received a new message
+        		if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
         			mMessages.add(new String[] {(String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message")});
 					createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
 					mHandler.sendEmptyMessage(2);
+	        	
+				// User joins the network
 	        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_JOINED")) {
 	        		Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
 	        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
@@ -384,7 +393,9 @@ public class NetworkMain extends Activity implements Runnable {
 					num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
 					mMemberAdapter.notifyDataSetChanged();
 					mMemberAdapter.notifyDataSetChanged();
-	    		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
+	    		
+				// User leaves the network
+	        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
 	    			Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
 	        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
 	        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);

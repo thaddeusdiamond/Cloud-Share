@@ -68,7 +68,7 @@ public class JoinNetwork extends Activity {
 				new Thread(new Runnable() {
 					public void run() {
 						String username = mTextView.getText().toString();
-						if (username.length() == 0) {
+						if (username.length() < 1 || username.length() > 30) {
 							usernameNull = Toast.makeText(getApplicationContext(), R.string.username_toast_null, Toast.LENGTH_LONG);
 							usernameNull.show();
 							return;

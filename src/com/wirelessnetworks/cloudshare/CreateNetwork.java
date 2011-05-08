@@ -81,13 +81,13 @@ public class CreateNetwork extends Activity {
 				androidId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 				regPreference = getSharedPreferences(getApplicationContext().getString(R.string.registration_preference), Context.MODE_PRIVATE);
 				registrationKey = regPreference.getString(getApplicationContext().getString (R.string.registration_key), null);
-				if (networkName.length() == 0) {
+				if (networkName.length() < 4 || networkName.length() > 30) {
 					networkNull = Toast.makeText(getApplicationContext(),
 							R.string.networkName_toast_null, Toast.LENGTH_SHORT);
 					networkNull.show();
 					return;
 				}
-				if (username.length() == 0) {
+				if (username.length() < 1 || username.length() > 30) {
 					usernameNull = Toast.makeText(getApplicationContext(),
 							R.string.username_toast_null, Toast.LENGTH_SHORT);
 					usernameNull.show();

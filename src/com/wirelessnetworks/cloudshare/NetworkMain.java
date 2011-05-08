@@ -352,38 +352,38 @@ public class NetworkMain extends Activity implements Runnable {
         	Bundle extras = intent.getExtras();
         	String action = intent.getAction();
         	
-        	if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
-        		String sender_id = (String) extras.get("u_unique_id");
-            	// Only display the message if it was sent by someone other than yourself
-	        	// Your message gets displayed in the onClickListener of the 'Send' button
-	        	if (!(sender_id.equals(android_id))) {
-	        		mMessages.add(new String[] {(String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message")});
-					NetworkMain.this.createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
-        	    }
-        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_JOINED")) {
-        		Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
-        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
-        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
-				String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
-				mMembers.add(memberInformation);
-				TextView num_members_view = (TextView) findViewById(R.id.num_members);
-				num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
-				mMemberAdapter.notifyDataSetChanged();
-				mMemberAdapter.notifyDataSetChanged();
-    		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
-    			Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
-        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
-        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
-				for (int i = 0; i < mMembers.size(); i++) {
-        			String[] memberInfo = mMembers.get(i);
-        			if (memberInfo[0].equals(information[0]))
-        				mMembers.remove(i);
-        		}
-				TextView num_members_view = (TextView) findViewById(R.id.num_members);
-				num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
-				mMemberAdapter.notifyDataSetChanged();
+        	String sender_id = (String) extras.get("u_unique_id");
+        	// Only display the message if it was sent by someone other than yourself
+        	// Your message gets displayed in the onClickListener of the 'Send' button
+        	if (!(sender_id.equals(android_id))) {
+	        	if (action.equals("com.wirelessnetworks.cloudshare.NEW_MESSAGE")) {
+	        			mMessages.add(new String[] {(String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message")});
+						NetworkMain.this.createNewChat((String) extras.getString("user"), sdf.format(cal.getTime()), (String) extras.get("message"));
+	
+	        	} else if (action.equals("com.wirelessnetworks.cloudshare.USER_JOINED")) {
+	        		Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
+	        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
+	        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
+					String[] memberInformation = new String[] {information[0], information[1], CloudShareUtils.reverseLocation(getApplicationContext(), information[2], information[3]) };
+					mMembers.add(memberInformation);
+					TextView num_members_view = (TextView) findViewById(R.id.num_members);
+					num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+					mMemberAdapter.notifyDataSetChanged();
+					mMemberAdapter.notifyDataSetChanged();
+	    		} else if (action.equals("com.wirelessnetworks.cloudshare.USER_LEFT")) {
+	    			Document doc = CloudShareUtils.getDOMbody(extras.getString("message"));
+	        		Element member_element = (Element) doc.getElementsByTagName("member").item(0);
+	        		String[] information = CloudShareUtils.getDOMresults(member_element, member_fields);
+					for (int i = 0; i < mMembers.size(); i++) {
+	        			String[] memberInfo = mMembers.get(i);
+	        			if (memberInfo[0].equals(information[0]))
+	        				mMembers.remove(i);
+	        		}
+					TextView num_members_view = (TextView) findViewById(R.id.num_members);
+					num_members_view.setText(mMembers.size() + " User" + (mMembers.size() != 1 ? "s" : "") + " Active");
+					mMemberAdapter.notifyDataSetChanged();
+	        	}
         	}
-            return;
         }
     };
 

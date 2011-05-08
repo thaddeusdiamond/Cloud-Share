@@ -42,7 +42,7 @@ public class CloudShareUtils {
 	    try {
 	        // Add data to be sent
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	    	nameValuePairs.add(new BasicNameValuePair("authtoken", "REDACTED"));
+	    	nameValuePairs.add(new BasicNameValuePair("authtoken", "HELLOKITTYGORU1212"));
         	for (int i = 0; i < parameters.length; i++) {
 	        	Log.d(parameters[i], values[i]);
         		nameValuePairs.add(new BasicNameValuePair(parameters[i], values[i]));

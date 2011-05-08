@@ -214,6 +214,7 @@ public class FindNetwork extends Activity implements Runnable {
 		return found_networks;
 	}
 	
+	//CUSTOM HANDLER TO SET UP THE LIST VIEW ON LOAD COMPLETION
 	private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
         	ListView lv = (ListView) findViewById(R.id.network_list);
@@ -230,6 +231,7 @@ public class FindNetwork extends Activity implements Runnable {
         }
 	};
 	
+	// CUSTOM EXTENDED ADAPTER TO REPRESENT A LIST OF NETWORKS
 	private class NetworkAdapter extends ArrayAdapter<String> {
 
 		private String[] network_ids; 

@@ -1,5 +1,5 @@
 // ============================================================================
-// CS 434; 05/08/11; Prof. Yang
+// CS 434; 05/08/11; Thaddeus Diamond, Jonathan MacMillan, Anton Petrov
 // 
 // C2DM Receiver Class
 //

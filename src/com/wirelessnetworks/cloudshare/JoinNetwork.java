@@ -44,27 +44,32 @@ public class JoinNetwork extends Activity {
 		SharedPreferences regPreference = getSharedPreferences(getString(R.string.registration_preference), Context.MODE_PRIVATE);
 	    mRegistrationKey = regPreference.getString(getString (R.string.registration_key), null);
 		mIntent = getIntent();
+		
+		mTextView = (EditText) findViewById(R.id.username);
+	    mButton = (Button) findViewById(R.id.join_network);
 	    
+		// SET UP A PROGRESS DIALOG BEFORE THE FACT TO AVOID UI X-CONTAMINATION
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setTitle("Joining the Network");
 		mProgressDialog.setMessage(getString(R.string.progress_dialog));
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setCancelable(false);
 		serverError = Toast.makeText(this, "There was an error joining this network, please try again", Toast.LENGTH_LONG);
-		
-		mTextView = (EditText) findViewById(R.id.username);
-	    mButton = (Button) findViewById(R.id.join_network);
-	    
+
+		// GET OLD PREFERENCE FOR NAME
 		namePreference = getSharedPreferences(getString(R.string.name_preference), Context.MODE_PRIVATE);
 		savedName = namePreference.getString(getString (R.string.saved_name), null);
 		if (savedName != null && savedName.length() > 0) {
 			mTextView.setText(savedName);
 		}
 	    
+		// JOIN THE NETWORK ONCE WE CLICK
 	    mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mProgressDialog.show();
+				
+				// BACKGROUND THE JOIN REQUEST
 				new Thread(new Runnable() {
 					public void run() {
 						String username = mTextView.getText().toString();
@@ -85,6 +90,7 @@ public class JoinNetwork extends Activity {
 							return;           	 
 			            }
 			            
+			            // GO INTO THE NEW NETWORK
 			            Intent networkMain = new Intent(getApplicationContext(), NetworkMain.class);
 			            networkMain.putExtra("networkXml", result);
 			            startActivity(networkMain);

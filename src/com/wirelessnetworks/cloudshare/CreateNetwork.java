@@ -203,6 +203,7 @@ public class CreateNetwork extends Activity {
             }
 	};
 	
+	// Process the server result (ensuring that we've actually joined the network) and send the result to NetworkMain
 	private void processHTTPResponse(HttpResponse response) throws IllegalStateException, IOException, JSONException, NoSuchAlgorithmException {
 		String result;
 		try {
